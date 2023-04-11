@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
-import { Product, ProductInBasket } from "../../types";
+import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
-import { stat } from "fs";
 
 interface CardProps {
   product: Product;
@@ -23,24 +22,28 @@ export default function Card({ product }: CardProps) {
     setQuantityOfProduct((prev) => prev - 1);
   };
 
-  const addProductToBasket = (priceId: string) => {
-    const product = {
-      priceId,
+  const addProductToBasket = () => {
+    const productToBasket = {
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      price_id: product.price_id,
       quantity: quantityOfProduct,
     };
 
     const productExistInBasket = basket.find(
-      (productInBasket) => productInBasket.priceId === product.priceId
+      (productInBasket) => productInBasket.price_id === productToBasket.price_id
     );
 
     if (productExistInBasket) {
-      removeFromBasket(product);
+      removeFromBasket(productToBasket);
       addToBasket({
-        priceId,
-        quantity: productExistInBasket.quantity + product.quantity,
+        ...productToBasket,
+        quantity: productExistInBasket.quantity + productToBasket.quantity,
       });
     } else {
-      addToBasket(product);
+      addToBasket(productToBasket);
     }
 
     setQuantityOfProduct(0);
@@ -76,10 +79,7 @@ export default function Card({ product }: CardProps) {
           </button>
         </div>
         <div className="card-actions justify-end">
-          <button
-            onClick={() => addProductToBasket(product.price_id)}
-            className="btn btn-primary"
-          >
+          <button onClick={addProductToBasket} className="btn btn-primary">
             Dodaj do koszyka
           </button>
         </div>

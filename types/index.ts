@@ -17,6 +17,10 @@ export interface Category {
 }
 
 export interface ProductInBasket {
-  priceId: string;
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  price_id: string;
   quantity: number;
 }

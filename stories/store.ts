@@ -18,7 +18,7 @@ export const useBasketStore = create<BasketStore>()((set) => ({
     })),
   removeFromBasket: (product: ProductInBasket) =>
     set((state) => ({
-      basket: state.basket.filter((prod) => prod.priceId !== product.priceId),
+      basket: state.basket.filter((prod) => prod.price_id !== product.price_id),
     })),
   cleanBasket: () =>
     set({

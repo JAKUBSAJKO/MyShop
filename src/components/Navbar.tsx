@@ -41,9 +41,11 @@ export default function Navbar() {
               className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-auto"
             >
               {basket.map((product) => (
-                <div key={product.priceId}>
-                  <p>{product.priceId}</p>
-                  <p>{product.quantity}</p>
+                <div key={product.id}>
+                  <p>{product.name}</p>
+                  <img src={product.image} width={64} />
+                  <p>Cena: {product.price} zł/szt.</p>
+                  <p>Ilość: {product.quantity}</p>
                 </div>
               ))}
             </ul>
