@@ -1,9 +1,11 @@
 import { Raleway, Roboto } from "next/font/google";
 
 import { prisma } from "../../server/db/client";
-import { Product } from "../../types";
+import { Product, ProductInBasket } from "../../types";
 
 import Card from "@/components/Card";
+import { useState } from "react";
+import { useBasketStore } from "../../stories/store";
 
 const raleway = Raleway({
   weight: ["300", "400", "500", "600", "700", "900"],
@@ -18,12 +20,12 @@ const roboto = Roboto({
 });
 
 export default function Home({ products }: { products: Product[] }) {
-  console.log(products);
+  const basket = useBasketStore((state) => state.basket);
+
   return (
     <main
       className={`${raleway.variable} ${roboto.variable} min-h-screen w-full bg-orange-400 font-roboto`}
     >
-      <div className="h-20 border-b-2"></div>
       <div className="max-w-5xl mx-auto py-32 flex flex-wrap justify-center items-center gap-4">
         {products.map((product: Product) => (
           <Card key={product.id} product={product} />
