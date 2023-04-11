@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,9 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String  
+model Product {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String?   @db.VarChar
+  description String?
+  price       Float?    @db.Real
+  price_id    String?
+  quantity    Int?      @db.SmallInt
+  image       String?
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  category_id String?   @db.Uuid
+  Category    Category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Category {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name       String?   @db.VarChar
+  created_at DateTime? @db.Timestamptz(6)
+  Product    Product[]
 }

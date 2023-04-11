@@ -25,3 +25,7 @@ h1 {
 p {
   @apply font-roboto text-base;
 }
+
+.badge {
+  @apply border-2 border-orange-500 rounded-none bg-transparent flex justify-center items-center text-white font-raleway;
+}

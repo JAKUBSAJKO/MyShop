@@ -1,4 +1,4 @@
-import { Product } from "@/pages";
+import { Product } from "../../types";
 
 interface CardProps {
   product: Product;
@@ -7,14 +7,14 @@ interface CardProps {
 export default function Card({ product }: CardProps) {
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
-      <figure>
-        <img
-          src="/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-          alt="Shoes"
-        />
+      <figure className="bg-white">
+        <img src={product.image} alt={product.name} />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">{product.name}</h2>
+        <h2 className="card-title">
+          {product.name}
+          <div className="badge">{product.Category.name.toUpperCase()}</div>
+        </h2>
         <p>{product.description}</p>
         <h3 className="card-title">{product.price} zł</h3>
         <div className="card-actions justify-end">
