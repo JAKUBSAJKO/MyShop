@@ -3,8 +3,8 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  price_id: string;
   quantity: number;
-  priceId: string;
   image: string;
   createdAt: Date;
   categoryId: string;
@@ -14,4 +14,9 @@ export interface Product {
 export interface Category {
   id: string;
   name: string;
+}
+
+export interface ProductInBasket {
+  priceId: string;
+  quantity: number;
 }
