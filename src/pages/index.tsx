@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import { prisma } from "../../server/db/client";
 import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
+import { routes } from "../../routes/routes";
 
 import Card from "@/components/Card";
 import Wrapper from "@/components/Wrapper";
@@ -13,7 +16,9 @@ const stripePromise = loadStripe(
 );
 
 export default function Home({ products }: { products: Product[] }) {
+  const { data: session } = useSession();
   const basket = useBasketStore((state) => state.basket);
+  const router = useRouter();
 
   const goToCheckout = async () => {
     const allProducts = basket.map(({ price_id, quantity }) => ({
@@ -35,6 +40,10 @@ export default function Home({ products }: { products: Product[] }) {
     await stripe?.redirectToCheckout({
       sessionId,
     });
+  };
+
+  const goToSignIn = () => {
+    router.push(routes.login);
   };
 
   useEffect(() => {
@@ -76,7 +85,10 @@ export default function Home({ products }: { products: Product[] }) {
               </div>
             ))}
             <li>
-              <button role="link" onClick={goToCheckout}>
+              <button
+                role="link"
+                onClick={session?.user ? goToCheckout : goToSignIn}
+              >
                 Checkout
               </button>
             </li>
