@@ -13,8 +13,12 @@ export default function Navbar() {
         <a className="btn btn-ghost normal-case text-xl">MyShop</a>
       </div>
       <div className="flex-none">
-        <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="btn btn-ghost btn-circle">
+        <div>
+          <label
+            htmlFor="my-drawer-4"
+            tabIndex={0}
+            className="btn btn-ghost btn-circle drawer-button"
+          >
             <div className="indicator">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +39,7 @@ export default function Navbar() {
               </span>
             </div>
           </label>
-          <div
+          {/* <div
             tabIndex={0}
             className="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow"
           >
@@ -52,7 +56,7 @@ export default function Navbar() {
                 </div>
               ))}
             </ul>
-          </div>
+          </div> */}
         </div>
         {session ? (
           <>
