@@ -15,17 +15,12 @@ const stripePromise = loadStripe(
 export default function Home({ products }: { products: Product[] }) {
   const basket = useBasketStore((state) => state.basket);
 
-  const handleClick = async () => {
-    const allProducts = [
-      {
-        price: "price_1Mve4TE7VR9pEPu2jLSUMWIx",
-        quantity: 5,
-      },
-      {
-        price: "price_1Mve5rE7VR9pEPu2xB8V3sk0",
-        quantity: 5,
-      },
-    ];
+  const goToCheckout = async () => {
+    const allProducts = basket.map(({ price_id, quantity }) => ({
+      price: price_id,
+      quantity,
+    }));
+
     const { id: sessionId } = await fetch("/api/checkout/session", {
       method: "POST",
       headers: {
@@ -81,7 +76,7 @@ export default function Home({ products }: { products: Product[] }) {
               </div>
             ))}
             <li>
-              <button role="link" onClick={handleClick}>
+              <button role="link" onClick={goToCheckout}>
                 Checkout
               </button>
             </li>
