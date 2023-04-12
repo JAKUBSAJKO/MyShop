@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
+import { prisma } from "../../server/db/client";
+import { headers } from "next/dist/client/components/headers";
 
 interface CardProps {
   product: Product;
@@ -49,6 +51,20 @@ export default function Card({ product }: CardProps) {
     setQuantityOfProduct(0);
   };
 
+  const updateQuantityInDB = async () => {
+    const currentQuantity: number = product.quantity - quantityOfProduct;
+
+    await fetch(`/api/products/${product.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(currentQuantity),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    setQuantityOfProduct(0);
+  };
+
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <figure className="bg-white">
@@ -77,6 +93,7 @@ export default function Card({ product }: CardProps) {
           >
             +
           </button>
+          <button onClick={updateQuantityInDB}>Check</button>
         </div>
         <div className="card-actions justify-end">
           <button onClick={addProductToBasket} className="btn btn-primary">
