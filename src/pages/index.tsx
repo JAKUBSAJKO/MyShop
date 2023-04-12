@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+
 import { prisma } from "../../server/db/client";
 import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
@@ -5,8 +8,53 @@ import { useBasketStore } from "../../stories/store";
 import Card from "@/components/Card";
 import Wrapper from "@/components/Wrapper";
 
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+);
+
 export default function Home({ products }: { products: Product[] }) {
   const basket = useBasketStore((state) => state.basket);
+
+  const handleClick = async () => {
+    const allProducts = [
+      {
+        price: "price_1Mve4TE7VR9pEPu2jLSUMWIx",
+        quantity: 5,
+      },
+      {
+        price: "price_1Mve5rE7VR9pEPu2xB8V3sk0",
+        quantity: 5,
+      },
+    ];
+    const { id: sessionId } = await fetch("/api/checkout/session", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(allProducts),
+    })
+      .then((res) => res.json())
+      .catch((err) => console.log(err));
+
+    const stripe = await stripePromise;
+    await stripe?.redirectToCheckout({
+      sessionId,
+    });
+  };
+
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("success")) {
+      console.log("Order placed! You will receive an email confirmation.");
+    }
+
+    if (query.get("canceled")) {
+      console.log(
+        "Order canceled -- continue to shop around and checkout when you’re ready."
+      );
+    }
+  }, []);
 
   return (
     <div>
@@ -32,6 +80,11 @@ export default function Home({ products }: { products: Product[] }) {
                 <p>Ilość: {product.quantity}</p>
               </div>
             ))}
+            <li>
+              <button role="link" onClick={handleClick}>
+                Checkout
+              </button>
+            </li>
           </ul>
         </div>
       </div>

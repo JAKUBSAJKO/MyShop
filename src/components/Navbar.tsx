@@ -39,24 +39,6 @@ export default function Navbar() {
               </span>
             </div>
           </label>
-          {/* <div
-            tabIndex={0}
-            className="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow"
-          >
-            <ul
-              tabIndex={0}
-              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-auto"
-            >
-              {basket.map((product) => (
-                <div key={product.id}>
-                  <p>{product.name}</p>
-                  <img src={product.image} width={64} />
-                  <p>Cena: {product.price} zł/szt.</p>
-                  <p>Ilość: {product.quantity}</p>
-                </div>
-              ))}
-            </ul>
-          </div> */}
         </div>
         {session ? (
           <>
