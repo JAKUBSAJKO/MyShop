@@ -9,8 +9,7 @@ export default async function handler(
   const { productId } = req.query;
 
   if (req.method === "PATCH") {
-    const currentQuantity = req.body;
-    console.log(currentQuantity, "<--");
+    const { currentQuantity } = req.body;
     await prisma.product.update({
       where: {
         id: productId as string,

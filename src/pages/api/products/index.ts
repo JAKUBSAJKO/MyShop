@@ -10,6 +10,9 @@ export default async function handler(
       include: {
         Category: true,
       },
+      orderBy: {
+        created_at: "asc",
+      },
     });
     res.status(200).json(products);
   }

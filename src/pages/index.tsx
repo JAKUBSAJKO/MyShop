@@ -8,6 +8,7 @@ import { prisma } from "../../server/db/client";
 import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
 import { routes } from "../../routes/routes";
+import { getProducts } from "../../services/services";
 
 import Card from "@/components/Card";
 import Wrapper from "@/components/Wrapper";
@@ -16,18 +17,12 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 );
 
-const fetchProducts = async () => {
-  const res = await fetch("/api/products");
-  const data = await res.json();
-  return data;
-};
-
 export default function Home() {
   const { data: session } = useSession();
   const basket = useBasketStore((state) => state.basket);
   const router = useRouter();
 
-  const { data: products } = useQuery<Product[]>("products", fetchProducts);
+  const { data: products } = useQuery<Product[]>("products", getProducts);
 
   const goToCheckout = async () => {
     const allProducts = basket.map(({ price_id, quantity }) => ({
@@ -111,7 +106,7 @@ export default function Home() {
 export async function getServerSideProps() {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery("products", fetchProducts);
+  await queryClient.prefetchQuery("products", getProducts);
 
   return {
     props: {

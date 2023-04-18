@@ -2,14 +2,16 @@ import { useState } from "react";
 
 import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
-import { prisma } from "../../server/db/client";
-import { headers } from "next/dist/client/components/headers";
+import { useMutation, useQueryClient } from "react-query";
+import { updateQuantity } from "../../services/services";
 
 interface CardProps {
   product: Product;
 }
 
 export default function Card({ product }: CardProps) {
+  const queryClient = useQueryClient();
+
   const basket = useBasketStore((state) => state.basket);
   const addToBasket = useBasketStore((state) => state.addToBasket);
   const removeFromBasket = useBasketStore((state) => state.removeFromBasket);
@@ -48,21 +50,19 @@ export default function Card({ product }: CardProps) {
       addToBasket(productToBasket);
     }
 
-    setQuantityOfProduct(0);
+    updateQuantityInDB();
   };
+
+  const { mutate, isLoading } = useMutation(updateQuantity, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("products");
+      setQuantityOfProduct(0);
+    },
+  });
 
   const updateQuantityInDB = async () => {
     const currentQuantity: number = product.quantity - quantityOfProduct;
-
-    await fetch(`/api/products/${product.id}`, {
-      method: "PATCH",
-      body: JSON.stringify(currentQuantity),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    setQuantityOfProduct(0);
+    mutate({ productId: product.id, currentQuantity });
   };
 
   return (
@@ -78,24 +78,31 @@ export default function Card({ product }: CardProps) {
         <p>{product.description}</p>
         <h3 className="card-title">{product.price} zł</h3>
         <div className="w-36 flex justify-center items-center">
-          <button
-            onClick={substractQuantity}
-            disabled={quantityOfProduct === 0}
-            className="btn btn-circle text-xl"
-          >
-            -
-          </button>
+          {!isLoading ? (
+            <button
+              onClick={substractQuantity}
+              disabled={quantityOfProduct === 0}
+              className="btn btn-circle text-xl"
+            >
+              -
+            </button>
+          ) : (
+            <p>Loading...</p>
+          )}
           <p className="text-center">{quantityOfProduct}</p>
-          <button
-            onClick={addQuantity}
-            disabled={
-              quantityOfProduct === product.quantity || product.quantity === 0
-            }
-            className="btn btn-circle text-xl"
-          >
-            +
-          </button>
-          <button onClick={updateQuantityInDB}>Check</button>
+          {!isLoading ? (
+            <button
+              onClick={addQuantity}
+              disabled={
+                quantityOfProduct === product.quantity || product.quantity === 0
+              }
+              className="btn btn-circle text-xl"
+            >
+              +
+            </button>
+          ) : (
+            <p>Loadin...</p>
+          )}
         </div>
         <div className="card-actions justify-end">
           <button onClick={addProductToBasket} className="btn btn-primary">
