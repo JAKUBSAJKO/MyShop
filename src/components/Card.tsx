@@ -88,7 +88,9 @@ export default function Card({ product }: CardProps) {
           <p className="text-center">{quantityOfProduct}</p>
           <button
             onClick={addQuantity}
-            disabled={quantityOfProduct === product.quantity}
+            disabled={
+              quantityOfProduct === product.quantity || product.quantity === 0
+            }
             className="btn btn-circle text-xl"
           >
             +

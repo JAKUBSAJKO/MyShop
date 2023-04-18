@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { dehydrate, QueryClient, useQuery } from "react-query";
 
 import { prisma } from "../../server/db/client";
 import { Product } from "../../types";
@@ -15,10 +16,18 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 );
 
-export default function Home({ products }: { products: Product[] }) {
+const fetchProducts = async () => {
+  const res = await fetch("/api/products");
+  const data = await res.json();
+  return data;
+};
+
+export default function Home() {
   const { data: session } = useSession();
   const basket = useBasketStore((state) => state.basket);
   const router = useRouter();
+
+  const { data: products } = useQuery<Product[]>("products", fetchProducts);
 
   const goToCheckout = async () => {
     const allProducts = basket.map(({ price_id, quantity }) => ({
@@ -67,7 +76,7 @@ export default function Home({ products }: { products: Product[] }) {
         <div className="drawer-content">
           <Wrapper>
             <div className="max-w-5xl mx-auto py-32 flex flex-wrap justify-center items-center gap-4">
-              {products.map((product: Product) => (
+              {products?.map((product: Product) => (
                 <Card key={product.id} product={product} />
               ))}
             </div>
@@ -100,15 +109,13 @@ export default function Home({ products }: { products: Product[] }) {
 }
 
 export async function getServerSideProps() {
-  const products = await prisma.product.findMany({
-    include: {
-      Category: true,
-    },
-  });
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery("products", fetchProducts);
 
   return {
     props: {
-      products: JSON.parse(JSON.stringify(products)),
+      products: dehydrate(queryClient),
     },
   };
 }
