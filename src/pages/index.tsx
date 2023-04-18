@@ -1,54 +1,14 @@
 import { useEffect } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { dehydrate, QueryClient, useQuery } from "react-query";
 
-import { prisma } from "../../server/db/client";
 import { Product } from "../../types";
-import { useBasketStore } from "../../stories/store";
-import { routes } from "../../routes/routes";
 import { getProducts } from "../../services/services";
 
-import Card from "@/components/Card";
-import Wrapper from "@/components/Wrapper";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-);
+import Drawer from "@/components/Drawer";
+import Content from "@/components/Content";
 
 export default function Home() {
-  const { data: session } = useSession();
-  const basket = useBasketStore((state) => state.basket);
-  const router = useRouter();
-
   const { data: products } = useQuery<Product[]>("products", getProducts);
-
-  const goToCheckout = async () => {
-    const allProducts = basket.map(({ price_id, quantity }) => ({
-      price: price_id,
-      quantity,
-    }));
-
-    const { id: sessionId } = await fetch("/api/checkout/session", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(allProducts),
-    })
-      .then((res) => res.json())
-      .catch((err) => console.log(err));
-
-    const stripe = await stripePromise;
-    await stripe?.redirectToCheckout({
-      sessionId,
-    });
-  };
-
-  const goToSignIn = () => {
-    router.push(routes.login);
-  };
 
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
@@ -68,36 +28,8 @@ export default function Home() {
     <div>
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content">
-          <Wrapper>
-            <div className="max-w-5xl mx-auto py-32 flex flex-wrap justify-center items-center gap-4">
-              {products?.map((product: Product) => (
-                <Card key={product.id} product={product} />
-              ))}
-            </div>
-          </Wrapper>
-        </div>
-        <div className="drawer-side">
-          <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-          <ul className="menu p-4 w-96 bg-base-100 text-base-content">
-            {basket.map((product) => (
-              <div key={product.id}>
-                <p>{product.name}</p>
-                <img src={product.image} width={64} />
-                <p>Cena: {product.price} zł/szt.</p>
-                <p>Ilość: {product.quantity}</p>
-              </div>
-            ))}
-            <li>
-              <button
-                role="link"
-                onClick={session?.user ? goToCheckout : goToSignIn}
-              >
-                Checkout
-              </button>
-            </li>
-          </ul>
-        </div>
+        <Content products={products!} />
+        <Drawer />
       </div>
     </div>
   );
