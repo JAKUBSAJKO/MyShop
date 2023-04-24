@@ -3,4 +3,5 @@ export const routes = {
   success: "/checkout/success",
   login: "/api/auth/signin",
   signIn: "/auth/sign-in",
+  summary: "/checkout/summary",
 };
