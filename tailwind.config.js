@@ -11,6 +11,13 @@ module.exports = {
         raleway: ["var(--font-raleway)"],
         roboto: ["var(--font-roboto)"],
       },
+      colors: {
+        "happy-memories-l": "#ff5858",
+        "happy-memories-r": "#f09819",
+      },
+      spacing: {
+        "card-420": "26.25rem",
+      },
     },
   },
   plugins: [require("daisyui")],

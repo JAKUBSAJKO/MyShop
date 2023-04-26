@@ -27,5 +27,13 @@ p {
 }
 
 .badge {
-  @apply border-2 border-orange-500 rounded-none bg-transparent flex justify-center items-center text-white font-raleway;
+  @apply border-2 border-orange-500 rounded-none bg-transparent flex justify-center items-center text-white font-raleway text-xs;
+}
+
+.gradient-bg {
+  @apply bg-gradient-to-r from-happy-memories-l to-happy-memories-r;
+}
+
+.btn-rounded {
+  @apply w-10 h-10 rounded-full bg-orange-500 disabled:bg-orange-400 hover:bg-orange-600;
 }

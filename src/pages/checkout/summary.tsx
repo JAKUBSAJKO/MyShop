@@ -1,8 +1,5 @@
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import { loadStripe } from "@stripe/stripe-js";
 
-import { routes } from "../../../routes/routes";
 import { useBasketStore } from "../../../stories/store";
 
 const stripePromise = loadStripe(
@@ -10,9 +7,6 @@ const stripePromise = loadStripe(
 );
 
 export default function Summary() {
-  const router = useRouter();
-  const { data: session } = useSession();
-
   const basket = useBasketStore((state) => state.basket);
 
   const goToCheckout = async () => {
@@ -37,16 +31,12 @@ export default function Summary() {
     });
   };
 
-  const goToSignIn = () => {
-    router.push(routes.login);
-  };
-
   return (
-    <div>
-      <div>
-        <ul>
+    <div className="w-full h-screen px-40 py-16 flex justify-center items-end gap-8">
+      <div className="basis-9/12 w-full h-full  p-8 rounded-3xl text-white">
+        <ul className="w-full min-h-full flex flex-wrap justify-center gap-8">
           {basket.map((product) => (
-            <div key={product.id}>
+            <div key={product.id} className="w-64 h-36 border-2">
               <p>{product.name}</p>
               <img src={product.image} width={64} />
               <p>Cena: {product.price} zł/szt.</p>
@@ -55,7 +45,9 @@ export default function Summary() {
           ))}
         </ul>
       </div>
-      <button role="link" onClick={session?.user ? goToCheckout : goToSignIn}>
+      <div className="basis-3/12 w-full h-44  rounded-3xl"></div>
+
+      <button role="link" onClick={goToCheckout}>
         Przejdź do płatności
       </button>
     </div>

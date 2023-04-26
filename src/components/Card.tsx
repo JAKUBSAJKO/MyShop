@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
@@ -66,28 +67,27 @@ export default function Card({ product }: CardProps) {
   };
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
-      <figure className="bg-white">
-        <img src={product.image} alt={product.name} />
+    <div className="card w-64 bg-base-100 shadow-xl text-white">
+      <figure className="bg-white p-8">
+        <img src={product.image} alt={product.name} width={144} />
       </figure>
-      <div className="card-body">
-        <h2 className="card-title">
-          {product.name}
-          <div className="badge">{product.Category.name.toUpperCase()}</div>
-        </h2>
-        <p>{product.description}</p>
-        <h3 className="card-title">{product.price} zł</h3>
-        <div className="w-36 flex justify-center items-center">
+      <div className="card-body flex justify-center items-center">
+        <div className="badge">{product.Category.name.toUpperCase()}</div>
+        <h2 className="font-raleway font-black text-3xl">{product.name}</h2>
+        <h3 className="font-roboto text-base">{product.price} zł / szt.</h3>
+        <div className="w-32 flex justify-center items-center mt-1 mb-2">
           {!isLoading ? (
             <button
               onClick={substractQuantity}
               disabled={quantityOfProduct === 0}
-              className="btn btn-circle text-xl"
+              className="btn-rounded"
             >
               -
             </button>
           ) : (
-            <p>Loading...</p>
+            <button className="btn-rounded flex justify-center items-center ">
+              <ClipLoader size={16} color="#ffffff" />
+            </button>
           )}
           <p className="text-center">{quantityOfProduct}</p>
           {!isLoading ? (
@@ -96,19 +96,22 @@ export default function Card({ product }: CardProps) {
               disabled={
                 quantityOfProduct === product.quantity || product.quantity === 0
               }
-              className="btn btn-circle text-xl"
+              className="btn-rounded"
             >
               +
             </button>
           ) : (
-            <p>Loadin...</p>
+            <button className="btn-rounded flex justify-center items-center ">
+              <ClipLoader size={16} color="#ffffff" />
+            </button>
           )}
         </div>
-        <div className="card-actions justify-end">
-          <button onClick={addProductToBasket} className="btn btn-primary">
-            Dodaj do koszyka
-          </button>
-        </div>
+        <button
+          onClick={addProductToBasket}
+          className="bg-orange-500 font-raleway font-bold text-sm rounded-lg px-4 py-2 hover:bg-orange-600 hover:scale-105"
+        >
+          Dodaj do koszyka
+        </button>
       </div>
     </div>
   );
