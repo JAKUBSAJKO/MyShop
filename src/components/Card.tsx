@@ -72,7 +72,9 @@ export default function Card({ product }: CardProps) {
         <img src={product.image} alt={product.name} width={144} />
       </figure>
       <div className="card-body flex justify-center items-center">
-        <div className="badge">{product.Category.name.toUpperCase()}</div>
+        <div className="product-badge">
+          {product.Category.name.toUpperCase()}
+        </div>
         <h2 className="font-raleway font-black text-3xl">{product.name}</h2>
         <h3 className="font-roboto text-base">{product.price} zł / szt.</h3>
         <div className="w-32 flex justify-center items-center mt-1 mb-2">

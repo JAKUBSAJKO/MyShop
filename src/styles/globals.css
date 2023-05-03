@@ -26,8 +26,12 @@ p {
   @apply font-roboto text-base;
 }
 
-.badge {
-  @apply border-2 border-orange-500 rounded-none bg-transparent flex justify-center items-center text-white font-raleway text-xs;
+.basket-badge {
+  @apply badge bg-orange-500 border-orange-500 text-white;
+}
+
+.product-badge {
+  @apply badge border-2 border-orange-500 rounded-none bg-transparent flex justify-center items-center text-white font-raleway text-xs;
 }
 
 .gradient-bg {

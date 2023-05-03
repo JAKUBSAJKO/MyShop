@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 
 import { useBasketStore } from "../../stories/store";
 import { routes } from "../../routes/routes";
+import DrawerCard from "./DrawerCard";
 
 export default function Drawer() {
   const router = useRouter();
@@ -21,19 +22,21 @@ export default function Drawer() {
   return (
     <div className="drawer-side">
       <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-      <ul className="menu p-4 w-96 bg-base-100 text-base-content">
+      <ul className="menu px-8 py-4 w-96 bg-base-100 text-base-content gap-4">
+        <h1 className="font-raleway text-white text-4xl pl-0 mt-4">Koszyk</h1>
+        <li className="border-2 border-white mx-0 mb-4"></li>
         {basket.map((product) => (
-          <div key={product.id}>
-            <p>{product.name}</p>
-            <img src={product.image} width={64} />
-            <p>Cena: {product.price} zł/szt.</p>
-            <p>Ilość: {product.quantity}</p>
-          </div>
+          <DrawerCard key={product.id} product={product} />
         ))}
         <li>
-          <button onClick={session?.user ? goToSummary : goToSignIn}>
-            Podsumowanie
-          </button>
+          {basket.length !== 0 ? (
+            <button
+              className="bg-orange-500 text-white font-raleway font-bold flex justify-center items-center mt-4 hover:bg-orange-600 hover:scale-105"
+              onClick={session?.user ? goToSummary : goToSignIn}
+            >
+              Podsumowanie
+            </button>
+          ) : null}
         </li>
       </ul>
     </div>
