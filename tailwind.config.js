@@ -14,6 +14,7 @@ module.exports = {
       colors: {
         "happy-memories-l": "#ff5858",
         "happy-memories-r": "#f09819",
+        "nav-grey": "#A6ADAF",
       },
       spacing: {
         "card-420": "26.25rem",

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useSession } from "next-auth/react";
 
 import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
@@ -12,6 +13,8 @@ interface CardProps {
 
 export default function Card({ product }: CardProps) {
   const queryClient = useQueryClient();
+
+  const { data: session } = useSession();
 
   const basket = useBasketStore((state) => state.basket);
   const addToBasket = useBasketStore((state) => state.addToBasket);
@@ -77,43 +80,48 @@ export default function Card({ product }: CardProps) {
         </div>
         <h2 className="font-raleway font-black text-3xl">{product.name}</h2>
         <h3 className="font-roboto text-base">{product.price} zł / szt.</h3>
-        <div className="w-32 flex justify-center items-center mt-1 mb-2">
-          {!isLoading ? (
+        {session ? (
+          <>
+            <div className="w-32 flex justify-center items-center mt-1 mb-2">
+              {!isLoading ? (
+                <button
+                  onClick={substractQuantity}
+                  disabled={quantityOfProduct === 0}
+                  className="btn-rounded"
+                >
+                  -
+                </button>
+              ) : (
+                <button className="btn-rounded flex justify-center items-center ">
+                  <ClipLoader size={16} color="#ffffff" />
+                </button>
+              )}
+              <p className="text-center">{quantityOfProduct}</p>
+              {!isLoading ? (
+                <button
+                  onClick={addQuantity}
+                  disabled={
+                    quantityOfProduct === product.quantity ||
+                    product.quantity === 0
+                  }
+                  className="btn-rounded"
+                >
+                  +
+                </button>
+              ) : (
+                <button className="btn-rounded flex justify-center items-center ">
+                  <ClipLoader size={16} color="#ffffff" />
+                </button>
+              )}
+            </div>
             <button
-              onClick={substractQuantity}
-              disabled={quantityOfProduct === 0}
-              className="btn-rounded"
+              onClick={addProductToBasket}
+              className="bg-orange-500 font-raleway font-bold text-sm rounded-lg px-4 py-2 hover:bg-orange-600 hover:scale-105"
             >
-              -
+              Dodaj do koszyka
             </button>
-          ) : (
-            <button className="btn-rounded flex justify-center items-center ">
-              <ClipLoader size={16} color="#ffffff" />
-            </button>
-          )}
-          <p className="text-center">{quantityOfProduct}</p>
-          {!isLoading ? (
-            <button
-              onClick={addQuantity}
-              disabled={
-                quantityOfProduct === product.quantity || product.quantity === 0
-              }
-              className="btn-rounded"
-            >
-              +
-            </button>
-          ) : (
-            <button className="btn-rounded flex justify-center items-center ">
-              <ClipLoader size={16} color="#ffffff" />
-            </button>
-          )}
-        </div>
-        <button
-          onClick={addProductToBasket}
-          className="bg-orange-500 font-raleway font-bold text-sm rounded-lg px-4 py-2 hover:bg-orange-600 hover:scale-105"
-        >
-          Dodaj do koszyka
-        </button>
+          </>
+        ) : null}
       </div>
     </div>
   );
