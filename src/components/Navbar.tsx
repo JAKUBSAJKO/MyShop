@@ -36,6 +36,7 @@ export default function Navbar() {
         ) : null}
         {session ? (
           <>
+            <p>{session.user?.name}</p>
             <div className="dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <MdOutlinePersonOutline className="text-2xl text-nav-grey" />
