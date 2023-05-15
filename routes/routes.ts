@@ -1,7 +1,7 @@
 export const routes = {
   home: "/",
   success: "/checkout/success",
-  login: "/api/auth/signin",
+  login: "/auth/login",
   signIn: "/auth/sign-in",
   summary: "/checkout/summary",
 };

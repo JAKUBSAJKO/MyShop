@@ -32,7 +32,8 @@ export const authOptions = {
     }),
   ],
   pages: {
-    newUser: "/auth/new-user",
+    signIn: "/auth/login",
+    // newUser: "/auth/new-user",
   },
 };
 
