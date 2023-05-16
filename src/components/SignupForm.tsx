@@ -4,13 +4,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import { routes } from "../../routes/routes";
 
-interface SignIn {
+interface SignUp {
   name: string;
   email: string;
   password: string;
 }
 
-export default function SignInForm() {
+export default function SignUpForm() {
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -20,9 +20,9 @@ export default function SignInForm() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<SignIn>();
+  } = useForm<SignUp>();
 
-  const onSubmit: SubmitHandler<SignIn> = async (data) => {
+  const onSubmit: SubmitHandler<SignUp> = async (data) => {
     const user = await fetch(routes.createUser, {
       method: "POST",
       body: JSON.stringify(data),

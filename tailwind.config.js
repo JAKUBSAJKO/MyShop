@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "login-foto": "url('/images/login.jpg')",
+        "signup-foto": "url('/images/signup.jpg')",
+      },
       fontFamily: {
         raleway: ["var(--font-raleway)"],
         roboto: ["var(--font-roboto)"],

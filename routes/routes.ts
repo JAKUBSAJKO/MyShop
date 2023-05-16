@@ -2,7 +2,7 @@ export const routes = {
   home: "/",
   success: "/checkout/success",
   login: "/auth/login",
-  signIn: "/auth/signin",
+  signup: "/auth/signup",
   summary: "/checkout/summary",
   createUser: "/api/auth/createUser",
 };
