@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
+const bcrypt = require("bcrypt");
+
 import { prisma } from "../../../../server/db/client";
 
 export const authOptions = {
@@ -17,17 +19,23 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const users = await prisma.user.findMany();
+        const user = await prisma.user.findFirst({
+          where: {
+            email: credentials.username,
+          },
+        });
 
-        const userExist = users.find(
-          (userFromDB) => userFromDB.email === credentials.username
-        );
-
-        if (userExist) {
-          return userExist;
-        } else {
+        if (!user) {
           return null;
         }
+
+        const match = await bcrypt.compare(credentials.password, user.password);
+
+        if (!match) {
+          return null;
+        }
+
+        return user;
       },
     }),
   ],
