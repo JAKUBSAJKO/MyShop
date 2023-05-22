@@ -21,6 +21,8 @@ module.exports = {
         "nav-grey": "#A6ADAF",
         "nav-grey-200": "#2A303C",
         trash: "#FF0022",
+        "cherry-700": "#c01525",
+        "cherry-800": "#a41623",
       },
       spacing: {
         "card-420": "26.25rem",

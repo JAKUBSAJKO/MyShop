@@ -1,15 +1,30 @@
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { useMutation, useQueryClient } from "react-query";
 
 import { useBasketStore } from "../../stories/store";
 import { routes } from "../../routes/routes";
 import DrawerCard from "./DrawerCard";
+import { Product } from "../../types";
+import { updateQuantity } from "../../services/services";
 
-export default function Drawer() {
+interface DrawerProps {
+  products: Product[];
+}
+
+export default function Drawer({ products }: DrawerProps) {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { data: session } = useSession();
 
+  const { mutate, isLoading } = useMutation(updateQuantity, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("products");
+    },
+  });
+
   const basket = useBasketStore((state) => state.basket);
+  const removeAllFromBasket = useBasketStore((state) => state.cleanBasket);
 
   const goToSummary = () => {
     router.push(routes.summary);
@@ -17,6 +32,19 @@ export default function Drawer() {
 
   const goToSignIn = () => {
     router.push(routes.login);
+  };
+
+  const clearBasket = () => {
+    removeAllFromBasket();
+    updateQuantityInDB();
+  };
+
+  const updateQuantityInDB = async () => {
+    const updateProductQuantity = basket.map((product) => {
+      const productInDB = products.find((element) => element.id === product.id);
+      const currentQuantity = productInDB!.quantity + product.quantity;
+      mutate({ productId: product.id, currentQuantity });
+    });
   };
 
   return (
@@ -28,16 +56,26 @@ export default function Drawer() {
         {basket.map((product) => (
           <DrawerCard key={product.id} product={product} />
         ))}
-        <li>
-          {basket.length !== 0 ? (
-            <button
-              className="bg-orange-500 text-white font-raleway font-bold flex justify-center items-center mt-4 hover:bg-orange-600 hover:scale-105"
-              onClick={session?.user ? goToSummary : goToSignIn}
-            >
-              Podsumowanie
-            </button>
-          ) : null}
-        </li>
+        {basket.length !== 0 ? (
+          <>
+            <li>
+              <button
+                className="bg-orange-500 text-white font-raleway font-bold flex justify-center items-center mt-4 hover:bg-orange-600 hover:scale-105"
+                onClick={session?.user ? goToSummary : goToSignIn}
+              >
+                Podsumowanie
+              </button>
+            </li>
+            <li>
+              <button
+                className="bg-cherry-700 text-white font-raleway font-bold flex justify-center items-center hover:bg-cherry-800 hover:scale-105 mb-4"
+                onClick={clearBasket}
+              >
+                Wyczyść koszyk
+              </button>
+            </li>
+          </>
+        ) : null}
       </ul>
     </div>
   );

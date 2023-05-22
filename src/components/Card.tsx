@@ -1,10 +1,10 @@
 import { useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useSession } from "next-auth/react";
+import { useMutation, useQueryClient } from "react-query";
 
 import { Product } from "../../types";
 import { useBasketStore } from "../../stories/store";
-import { useMutation, useQueryClient } from "react-query";
 import { updateQuantity } from "../../services/services";
 
 interface CardProps {

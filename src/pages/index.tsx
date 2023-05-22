@@ -29,7 +29,7 @@ export default function Home() {
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <Content products={products!} />
-        <Drawer />
+        <Drawer products={products!} />
       </div>
     </div>
   );
