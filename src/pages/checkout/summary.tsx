@@ -61,11 +61,11 @@ export default function Summary() {
           <h1 className="text-4xl">TWÓJ KOSZYK</h1>
           <p>Masz w swoim koszyku {basket.length} rzeczy</p>
         </div>
-        <ul className="max-w-xl h-80 overflow-y-scroll">
+        <ul className="max-w-xl flex flex-col gap-4 overflow-y-scroll no-scrollbar">
           {basket.map((product) => (
             <li
               key={product.id}
-              className="h-24 bg-nav-grey-200 py-4 flex items-center rounded-2xl mb-6"
+              className="h-24 bg-nav-grey-200 py-4 flex items-center rounded-2xl"
             >
               <div className="h-16 px-3 mx-4 bg-white flex justify-center items-center rounded-xl">
                 <img src={product.image} alt={product.name} width={48} />
