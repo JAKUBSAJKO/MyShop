@@ -1,19 +1,32 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { loadStripe } from "@stripe/stripe-js";
 import { BiArrowBack } from "react-icons/bi";
 import { FaTrashAlt } from "react-icons/fa";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { useBasketStore } from "../../../stories/store";
-import { ProductInBasket } from "../../../types";
+import { Product, ProductInBasket } from "../../../types";
+import { getProducts, updateQuantity } from "../../../services/services";
+import { routes } from "../../../routes/routes";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 );
 
 export default function Summary() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const basket = useBasketStore((state) => state.basket);
   const removeFromBasket = useBasketStore((state) => state.removeFromBasket);
+
+  const { data: products } = useQuery("products", getProducts);
+
+  const { mutate, isLoading } = useMutation(updateQuantity, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("products");
+    },
+  });
 
   const goToCheckout = async () => {
     const allProducts = basket.map(({ price_id, quantity }) => ({
@@ -39,6 +52,11 @@ export default function Summary() {
 
   const removeItem = (product: ProductInBasket) => {
     removeFromBasket(product);
+    const productInDB = products.find(
+      (element: Product) => element.id === product.id
+    );
+    const currentQuantity = productInDB.quantity + product.quantity;
+    mutate({ productId: product.id, currentQuantity });
   };
 
   const total = basket.reduce(
@@ -47,12 +65,18 @@ export default function Summary() {
     0
   );
 
+  useEffect(() => {
+    if (basket.length < 1) {
+      router.push(routes.home);
+    }
+  }, [basket]);
+
   return (
     <div className="w-full h-screen p-16 flex bg-orange-400">
       <div className="basis-3/5 flex flex-col text-white gap-6">
         <button
           className="flex items-center gap-2"
-          onClick={() => router.back()}
+          onClick={() => router.push(routes.home)}
         >
           <BiArrowBack />
           <p className="uppercase font-medium">Kontynuuj zakupy</p>
@@ -117,7 +141,12 @@ export default function Summary() {
           <button
             role="link"
             onClick={goToCheckout}
-            className="bg-orange-500 py-3 rounded-lg font-semibold hover:bg-orange-600 hover:scale-105"
+            className={`py-3 rounded-lg font-semibold hover:scale-105 ${
+              basket.length < 1
+                ? "bg-gray-400 hover:scale-100"
+                : "bg-orange-500 hover:bg-orange-600"
+            }`}
+            disabled={basket.length < 1}
           >
             Przejdź do płatności
           </button>
