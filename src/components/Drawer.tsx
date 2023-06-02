@@ -5,14 +5,17 @@ import { useMutation, useQueryClient } from "react-query";
 import { useBasketStore } from "../../stories/store";
 import { routes } from "../../routes/routes";
 import DrawerCard from "./DrawerCard";
-import { Product } from "../../types";
+import { Product, ProductInBasket } from "../../types";
 import { updateQuantity } from "../../services/services";
 
 interface DrawerProps {
   products: Product[];
+  setBasketInLS: (
+    value: ProductInBasket[] | ((val: ProductInBasket[]) => ProductInBasket[])
+  ) => void;
 }
 
-export default function Drawer({ products }: DrawerProps) {
+export default function Drawer({ products, setBasketInLS }: DrawerProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data: session } = useSession();
@@ -37,6 +40,7 @@ export default function Drawer({ products }: DrawerProps) {
   const clearBasket = () => {
     removeAllFromBasket();
     updateQuantityInDB();
+    setBasketInLS([]);
   };
 
   const updateQuantityInDB = async () => {

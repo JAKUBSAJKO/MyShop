@@ -8,6 +8,7 @@ interface BasketStore {
   addToBasket: (product: ProductInBasket) => void;
   removeFromBasket: (product: ProductInBasket) => void;
   cleanBasket: () => void;
+  addFromLocalStorage: (basketLS: ProductInBasket[]) => void;
 }
 
 export const useBasketStore = create<BasketStore>()((set) => ({
@@ -24,6 +25,10 @@ export const useBasketStore = create<BasketStore>()((set) => ({
     set({
       basket: [],
     }),
+  addFromLocalStorage: (basketLS: ProductInBasket[]) =>
+    set((state) => ({
+      basket: basketLS,
+    })),
 }));
 
 if (process.env.NODE_ENV === "development") {

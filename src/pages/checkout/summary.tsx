@@ -9,6 +9,7 @@ import { useBasketStore } from "../../../stories/store";
 import { Product, ProductInBasket } from "../../../types";
 import { getProducts, updateQuantity } from "../../../services/services";
 import { routes } from "../../../routes/routes";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -21,6 +22,11 @@ export default function Summary() {
   const removeFromBasket = useBasketStore((state) => state.removeFromBasket);
 
   const { data: products } = useQuery("products", getProducts);
+
+  const [basketInLS, setBasketInLS] = useLocalStorage<ProductInBasket[]>(
+    "basketLS",
+    []
+  );
 
   const { mutate, isLoading } = useMutation(updateQuantity, {
     onSuccess: () => {
@@ -57,6 +63,10 @@ export default function Summary() {
     );
     const currentQuantity = productInDB.quantity + product.quantity;
     mutate({ productId: product.id, currentQuantity });
+    const removeItemInLS = basketInLS.filter(
+      (productInLS) => productInLS.id !== product.id
+    );
+    setBasketInLS([...removeItemInLS]);
   };
 
   const total = basket.reduce(

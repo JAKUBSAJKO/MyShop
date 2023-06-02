@@ -3,15 +3,24 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "react-query";
 
-import { Product } from "../../types";
+import { Product, ProductInBasket } from "../../types";
 import { useBasketStore } from "../../stories/store";
 import { updateQuantity } from "../../services/services";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 interface CardProps {
   product: Product;
+  basketInLS: ProductInBasket[];
+  setBasketInLS: (
+    value: ProductInBasket[] | ((val: ProductInBasket[]) => ProductInBasket[])
+  ) => void;
 }
 
-export default function Card({ product }: CardProps) {
+export default function Card({
+  product,
+  basketInLS,
+  setBasketInLS,
+}: CardProps) {
   const queryClient = useQueryClient();
 
   const { data: session } = useSession();
@@ -44,14 +53,29 @@ export default function Card({ product }: CardProps) {
       (productInBasket) => productInBasket.price_id === productToBasket.price_id
     );
 
+    const productExistInLS = basketInLS.find(
+      (productInLS) => productInLS.price_id === productToBasket.price_id
+    );
+
     if (productExistInBasket) {
       removeFromBasket(productToBasket);
       addToBasket({
         ...productToBasket,
         quantity: productExistInBasket.quantity + productToBasket.quantity,
       });
+      const basketLSAfterRemoveItem = basketInLS.filter(
+        (productInLS) => productInLS.id !== productToBasket.id
+      );
+      setBasketInLS([
+        ...basketLSAfterRemoveItem,
+        {
+          ...productToBasket,
+          quantity: productExistInLS!.quantity + productToBasket.quantity,
+        },
+      ]);
     } else {
       addToBasket(productToBasket);
+      setBasketInLS([...basketInLS, productToBasket]);
     }
 
     updateQuantityInDB();
