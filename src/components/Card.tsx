@@ -6,7 +6,6 @@ import { useMutation, useQueryClient } from "react-query";
 import { Product, ProductInBasket } from "../../types";
 import { useBasketStore } from "../../stories/store";
 import { updateQuantity } from "../../services/services";
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 interface CardProps {
   product: Product;
@@ -94,59 +93,63 @@ export default function Card({
   };
 
   return (
-    <div className="card w-64 bg-base-100 shadow-xl text-white">
-      <figure className="bg-white p-8">
-        <img src={product.image} alt={product.name} width={144} />
-      </figure>
-      <div className="card-body flex justify-center items-center">
-        <div className="product-badge">
-          {product.Category.name.toUpperCase()}
-        </div>
-        <h2 className="font-raleway font-black text-3xl">{product.name}</h2>
-        <h3 className="font-roboto text-base">{product.price} zł / szt.</h3>
-        {session ? (
-          <>
-            <div className="w-32 flex justify-center items-center mt-1 mb-2">
-              {!isLoading ? (
-                <button
-                  onClick={substractQuantity}
-                  disabled={quantityOfProduct === 0}
-                  className="btn-rounded"
-                >
-                  -
-                </button>
-              ) : (
-                <button className="btn-rounded flex justify-center items-center ">
-                  <ClipLoader size={16} color="#ffffff" />
-                </button>
-              )}
-              <p className="text-center">{quantityOfProduct}</p>
-              {!isLoading ? (
-                <button
-                  onClick={addQuantity}
-                  disabled={
-                    quantityOfProduct === product.quantity ||
-                    product.quantity === 0
-                  }
-                  className="btn-rounded"
-                >
-                  +
-                </button>
-              ) : (
-                <button className="btn-rounded flex justify-center items-center ">
-                  <ClipLoader size={16} color="#ffffff" />
-                </button>
-              )}
+    <>
+      {product.quantity > 0 ? (
+        <div className="card w-64 bg-base-100 shadow-xl text-white">
+          <figure className="bg-white p-8">
+            <img src={product.image} alt={product.name} width={144} />
+          </figure>
+          <div className="card-body flex justify-center items-center">
+            <div className="product-badge">
+              {product.Category.name.toUpperCase()}
             </div>
-            <button
-              onClick={addProductToBasket}
-              className="bg-orange-500 font-raleway font-bold text-sm rounded-lg px-4 py-2 hover:bg-orange-600 hover:scale-105"
-            >
-              Dodaj do koszyka
-            </button>
-          </>
-        ) : null}
-      </div>
-    </div>
+            <h2 className="font-raleway font-black text-3xl">{product.name}</h2>
+            <h3 className="font-roboto text-base">{product.price} zł / szt.</h3>
+            {session ? (
+              <>
+                <div className="w-32 flex justify-center items-center mt-1 mb-2">
+                  {!isLoading ? (
+                    <button
+                      onClick={substractQuantity}
+                      disabled={quantityOfProduct === 0}
+                      className="btn-rounded"
+                    >
+                      -
+                    </button>
+                  ) : (
+                    <button className="btn-rounded flex justify-center items-center ">
+                      <ClipLoader size={16} color="#ffffff" />
+                    </button>
+                  )}
+                  <p className="text-center">{quantityOfProduct}</p>
+                  {!isLoading ? (
+                    <button
+                      onClick={addQuantity}
+                      disabled={
+                        quantityOfProduct === product.quantity ||
+                        product.quantity === 0
+                      }
+                      className="btn-rounded"
+                    >
+                      +
+                    </button>
+                  ) : (
+                    <button className="btn-rounded flex justify-center items-center ">
+                      <ClipLoader size={16} color="#ffffff" />
+                    </button>
+                  )}
+                </div>
+                <button
+                  onClick={addProductToBasket}
+                  className="bg-orange-500 font-raleway font-bold text-sm rounded-lg px-4 py-2 hover:bg-orange-600 hover:scale-105"
+                >
+                  Dodaj do koszyka
+                </button>
+              </>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
