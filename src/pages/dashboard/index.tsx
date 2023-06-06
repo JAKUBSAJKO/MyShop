@@ -1,42 +1,22 @@
 import { useState } from "react";
 
-import { dashboard } from "../../../constants";
 import DashboardWrapper from "@/components/DashboardWrapper";
+import Nav from "@/components/dashboard/Nav";
 
-const nav = [
-  { icon: "A", title: dashboard.home },
-  { icon: "B", title: dashboard.addProduct },
-  { icon: "C", title: dashboard.enterDelivery },
-  { icon: "D", title: dashboard.allProducts },
-];
+import { dashboard } from "../../../constants";
 
 export default function Dashboard() {
   const [title, setTitle] = useState("Strona główna");
   return (
     <div className="w-full h-screen bg-gray-900 flex">
-      <div className="w-60 bg-gray-800 shadow-2xl flex flex-col">
+      <div className="w-64 bg-gray-800 shadow-2xl flex flex-col">
         <div className="flex justify-center items-center my-12">
           <h1 className="text-4xl text-white font-raleway font-bold">
             My Shop
           </h1>
         </div>
         <div>
-          <ul className="w-full flex flex-col gap-4 px-4">
-            {nav.map((element) => (
-              <div
-                className={`py-3 px-4 rounded-lg flex items-center gap-4 hover:bg-gray-900 cursor-pointer ${
-                  title === element.title
-                    ? "bg-orange-500 text-white"
-                    : "text-gray-400"
-                }`}
-                onClick={() => setTitle(element.title)}
-                key={element.title}
-              >
-                <p>{element.icon}</p>
-                <p>{element.title}</p>
-              </div>
-            ))}
-          </ul>
+          <Nav title={title} setTitle={setTitle} />
         </div>
       </div>
       <div className="flex-1 h-full w-auto flex flex-col">
@@ -45,7 +25,6 @@ export default function Dashboard() {
           <h2 className="text-2xl text-white font-raleway font-normal mb-4">
             {title}
           </h2>
-          {/* <div className="bg-gray-600 w-full h-full"></div> */}
           <DashboardWrapper>
             {title === dashboard.home ? (
               <div>
