@@ -5,5 +5,5 @@ export default function DashboardWrapper({
 }: {
   children: ReactNode;
 }) {
-  return <div className="bg-red-500">{children}</div>;
+  return <div className="bg-gray-700 w-full h-full">{children}</div>;
 }
