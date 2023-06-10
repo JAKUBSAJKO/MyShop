@@ -1,12 +1,19 @@
 import { useState } from "react";
 
+import AddProduct from "@/components/dashboard/AddProduct";
 import DashboardWrapper from "@/components/DashboardWrapper";
 import Nav from "@/components/dashboard/Nav";
 
 import { dashboard } from "../../../constants";
+import { Category } from "../../../types";
 
-export default function Dashboard() {
+interface DashboardProps {
+  categories: Category[];
+}
+
+export default function Dashboard({ categories }: DashboardProps) {
   const [title, setTitle] = useState("Strona główna");
+
   return (
     <div className="w-full h-screen bg-gray-900 flex">
       <div className="w-64 bg-gray-800 shadow-2xl flex flex-col">
@@ -31,13 +38,22 @@ export default function Dashboard() {
                 <h2>Strona główna</h2>
               </div>
             ) : title === dashboard.addProduct ? (
-              <div>
-                <h2>Dodaj produkt</h2>
-              </div>
+              <AddProduct categories={categories} />
             ) : null}
           </DashboardWrapper>
         </div>
       </div>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const res = await fetch("http://localhost:3000/api/products/category");
+  const categories = await res.json();
+
+  return {
+    props: {
+      categories,
+    },
+  };
 }
