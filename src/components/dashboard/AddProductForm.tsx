@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
+import { supabase } from "../../../lib/supabase/supabaseClient";
 import { Category } from "../../../types";
 
 interface AddNewProduct {
@@ -17,6 +18,7 @@ interface AddProductFormProps {
 
 export default function AddProductForm({ categories }: AddProductFormProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [uploadImage, setUploadImage] = useState<any>();
 
   const {
     register,
@@ -25,20 +27,35 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
     watch,
   } = useForm<AddNewProduct>();
 
-  const onSubmit: SubmitHandler<AddNewProduct> = (data) => {
+  const onSubmit: SubmitHandler<AddNewProduct> = async (data) => {
     console.log(data);
+
+    // Step 1: Add file to supabase storage
+    // uploadImg();
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageSrc(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setImageSrc(null);
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files && e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setImageSrc(reader.result as string);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   } else {
+  //     setImageSrc(null);
+  //   }
+  // };
+
+  const uploadImg = async () => {
+    const { data, error } = await supabase.storage
+      .from("myshop")
+      .upload(`products/${uploadImage?.name}`, uploadImage);
+
+    if (data) {
+      console.log(data);
+    } else if (error) {
+      console.log(error);
     }
   };
 
@@ -93,7 +110,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
           <div>
             <h3>Podgląd zdjęcia:</h3>
             <img
-              src={imageSrc}
+              src={uploadImage}
               alt="Podgląd zdjęcia"
               width={256}
               height={256}
@@ -105,11 +122,13 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
           id="image"
           accept="image/*"
           {...register("image", { required: true })}
-          onChange={handleImageChange}
+          // onChange={handleImageChange}
+          onChange={(e: any) => setUploadImage(e.target.files[0])}
         />
         {errors.name && (
           <p className="form-error">Zdjęcie produktu jest wymagana</p>
         )}
+        <button onClick={uploadImg}>Dodaj zdjęcie do supabase</button>
       </div>
     </form>
   );
