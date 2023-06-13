@@ -3,11 +3,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import { supabase } from "../../../lib/supabase/supabaseClient";
 import { Category } from "../../../types";
+import { routes } from "../../../routes/routes";
 
 interface AddNewProduct {
   name: string;
   description: string;
   price: string;
+  quantity: number;
   image: File | null;
   category: string;
 }
@@ -24,15 +26,35 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
     formState: { errors },
     handleSubmit,
     watch,
+    reset,
   } = useForm<AddNewProduct>();
 
   const onSubmit: SubmitHandler<AddNewProduct> = async (data) => {
-    console.log(data);
-
     // Step 1: Add file to supabase storage
     const file = data.image?.[0];
     const path = await uploadImg(file);
     const imagePath = `${process.env.NEXT_PUBLIC_LINK_TO_STORAGE_BUCKET}${path?.path}`;
+
+    const product = {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      quantity: data.quantity,
+      image: imagePath,
+    };
+
+    // Step 2: Add product to Stripe and get price_id
+    const newProduct = await fetch(routes.addProduct, {
+      method: "POST",
+      body: JSON.stringify(product),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const newData = await newProduct.json();
+
+    console.log(newData);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,22 +107,34 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
               </option>
             ))}
           </select>
+          {errors.category && (
+            <p className="form-error">Rodzaj produktu jest wymagana</p>
+          )}
           <label htmlFor="description">Opis produktu</label>
           <textarea
             id="description"
             {...register("description", { required: true })}
           />
-          {errors.name && (
+          {errors.description && (
             <p className="form-error">Opis produktu jest wymagana</p>
           )}
           <label htmlFor="description">Cena produktu</label>
           <input
             type="number"
             step=".01"
-            id="description"
+            id="price"
             {...register("price", { required: true })}
           />
-          {errors.name && (
+          {errors.description && (
+            <p className="form-error">Cena produktu jest wymagana</p>
+          )}
+          <label htmlFor="description">Ilość produktu</label>
+          <input
+            type="number"
+            id="quantity"
+            {...register("quantity", { required: true })}
+          />
+          {errors.quantity && (
             <p className="form-error">Cena produktu jest wymagana</p>
           )}
           <button>Dodaj</button>
@@ -118,7 +152,15 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
                 height={256}
               />
               <div
-                onClick={() => setImageSrc(null)}
+                onClick={() => {
+                  setImageSrc(null);
+                  reset(
+                    { image: null },
+                    {
+                      keepErrors: true,
+                    }
+                  );
+                }}
                 className="absolute top-0 right-0 text-2xl font-bold"
               >
                 X
