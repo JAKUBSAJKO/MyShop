@@ -8,7 +8,7 @@ interface AddNewProduct {
   name: string;
   description: string;
   price: string;
-  image: FileList;
+  image: File | null;
   category: string;
 }
 
@@ -18,7 +18,6 @@ interface AddProductFormProps {
 
 export default function AddProductForm({ categories }: AddProductFormProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [uploadImage, setUploadImage] = useState<any>();
 
   const {
     register,
@@ -31,29 +30,31 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
     console.log(data);
 
     // Step 1: Add file to supabase storage
-    // uploadImg();
+    const file = data.image?.[0];
+    const path = await uploadImg(file);
+    const imagePath = `${process.env.NEXT_PUBLIC_LINK_TO_STORAGE_BUCKET}${path?.path}`;
   };
 
-  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files && e.target.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setImageSrc(reader.result as string);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   } else {
-  //     setImageSrc(null);
-  //   }
-  // };
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImageSrc(null);
+    }
+  };
 
-  const uploadImg = async () => {
+  const uploadImg = async (image: File) => {
     const { data, error } = await supabase.storage
       .from("myshop")
-      .upload(`products/${uploadImage?.name}`, uploadImage);
+      .upload(`products/${image?.name}`, image);
 
     if (data) {
-      console.log(data);
+      return data;
     } else if (error) {
       console.log(error);
     }
@@ -109,12 +110,20 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
         {imageSrc && (
           <div>
             <h3>Podgląd zdjęcia:</h3>
-            <img
-              src={uploadImage}
-              alt="Podgląd zdjęcia"
-              width={256}
-              height={256}
-            />
+            <div className="relative">
+              <img
+                src={imageSrc}
+                alt="Podgląd zdjęcia"
+                width={256}
+                height={256}
+              />
+              <div
+                onClick={() => setImageSrc(null)}
+                className="absolute top-0 right-0 text-2xl font-bold"
+              >
+                X
+              </div>
+            </div>
           </div>
         )}
         <input
@@ -122,13 +131,12 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
           id="image"
           accept="image/*"
           {...register("image", { required: true })}
-          // onChange={handleImageChange}
-          onChange={(e: any) => setUploadImage(e.target.files[0])}
+          onChange={handleImageChange}
+          className={`${imageSrc ? "hidden" : ""}`}
         />
         {errors.name && (
           <p className="form-error">Zdjęcie produktu jest wymagana</p>
         )}
-        <button onClick={uploadImg}>Dodaj zdjęcie do supabase</button>
       </div>
     </form>
   );
