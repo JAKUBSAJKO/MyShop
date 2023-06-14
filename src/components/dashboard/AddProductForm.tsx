@@ -41,6 +41,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
       price: data.price,
       quantity: data.quantity,
       image: imagePath,
+      categoryId: data.category,
     };
 
     // Step 2: Add product to Stripe and get price_id

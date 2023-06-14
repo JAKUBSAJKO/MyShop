@@ -8,7 +8,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { name, description, price, quantity, image } = req.body;
+    const { name, description, price, quantity, image, categoryId } = req.body;
+
+    const priceDB = parseFloat(price);
+    const quantityDB = parseInt(quantity);
 
     // Step 1: Create product in Stripe
     const newProduct = await stripe.products.create({
@@ -24,10 +27,19 @@ export default async function handler(
       product: newProduct.id,
     });
 
-    res.status(200).json({ mess: "good" });
+    // Step 3: Create product in DB
+    const newProductForDB = await prisma.product.create({
+      data: {
+        name,
+        description,
+        price: priceDB,
+        price_id: newPrice.id,
+        image,
+        quantity: quantityDB,
+        category_id: categoryId,
+      },
+    });
 
-    // const newProduct = await prisma.product.create({
-    //   data: {},
-    // });
+    res.status(200).json({ mess: "good" });
   }
 }
