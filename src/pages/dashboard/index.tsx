@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import AddProduct from "@/components/dashboard/AddProduct";
 import DashboardWrapper from "@/components/DashboardWrapper";
@@ -6,6 +7,7 @@ import Nav from "@/components/dashboard/Nav";
 
 import { dashboard } from "../../../constants";
 import { Category } from "../../../types";
+import { routes } from "../../../routes/routes";
 
 interface DashboardProps {
   categories: Category[];
@@ -18,9 +20,11 @@ export default function Dashboard({ categories }: DashboardProps) {
     <div className="w-full h-screen bg-gray-900 flex">
       <div className="w-64 bg-gray-800 shadow-2xl flex flex-col">
         <div className="flex justify-center items-center my-12">
-          <h1 className="text-4xl text-white font-raleway font-bold">
-            My Shop
-          </h1>
+          <Link href={routes.home}>
+            <h1 className="text-4xl text-white font-raleway font-bold">
+              My Shop
+            </h1>
+          </Link>
         </div>
         <div>
           <Nav title={title} setTitle={setTitle} />
