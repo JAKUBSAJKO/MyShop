@@ -26,6 +26,23 @@ module.exports = {
       },
       spacing: {
         "card-420": "26.25rem",
+        "add-product": "32rem",
+      },
+      maxWidth: {
+        "upload-image": "256px",
+      },
+      keyframes: {
+        wiggle: {
+          "0%, 100%": { transform: "rotate(-3deg)" },
+          "50%": { transform: "rotate(3deg)" },
+          "0%": { transform: "rotate(-3deg)" },
+          "25%": { transform: "rotate(3deg)" },
+          "50%": { transform: "rotate(-6deg)" },
+          "75%": { transform: "rotate(6deg)" },
+        },
+      },
+      animation: {
+        wiggle: "wiggle 1s ease-in-out infinite",
       },
     },
   },

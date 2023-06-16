@@ -8,7 +8,7 @@ interface AddProductProps {
 
 export default function AddProduct({ categories }: AddProductProps) {
   return (
-    <div className="w-full h-full bg-red-500 flex">
+    <div className="w-full h-full flex">
       <AddProductForm categories={categories} />
     </div>
   );

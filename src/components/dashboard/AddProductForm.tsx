@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { ImArrowUp2 } from "react-icons/im";
 
 import { supabase } from "../../../lib/supabase/supabaseClient";
 import { Category } from "../../../types";
@@ -87,85 +88,109 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
   const imageFile = watch("image");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex">
-      <div className="w-96 h-full bg-green-600">
-        <div>
-          <label htmlFor="name">Nazwa produktu</label>
-          <input
-            type="text"
-            id="name"
-            {...register("name", { required: true })}
-          />
-          {errors.name && (
-            <p className="form-error">Nazwa produktu jest wymagana</p>
-          )}
-          <label htmlFor="category">Rodzaj produktu</label>
-          <select id="category" {...register("category", { required: true })}>
-            <option value="">Wybierz rodzaj</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-          {errors.category && (
-            <p className="form-error">Rodzaj produktu jest wymagana</p>
-          )}
-          <label htmlFor="description">Opis produktu</label>
-          <textarea
-            id="description"
-            {...register("description", { required: true })}
-          />
-          {errors.description && (
-            <p className="form-error">Opis produktu jest wymagana</p>
-          )}
-          <label htmlFor="description">Cena produktu</label>
-          <input
-            type="number"
-            step=".01"
-            id="price"
-            {...register("price", { required: true })}
-          />
-          {errors.description && (
-            <p className="form-error">Cena produktu jest wymagana</p>
-          )}
-          <label htmlFor="description">Ilość produktu</label>
-          <input
-            type="number"
-            id="quantity"
-            {...register("quantity", { required: true })}
-          />
-          {errors.quantity && (
-            <p className="form-error">Cena produktu jest wymagana</p>
-          )}
-          <button>Dodaj</button>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex gap-16">
+      <div className="w-add-product h-full">
+        <div className="w-full bg-gray-800 rounded-2xl py-14 flex flex-col items-center gap-3">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="name" className="form-add-product-title">
+              Nazwa produktu
+            </label>
+            <input
+              type="text"
+              id="name"
+              {...register("name", { required: true })}
+              className="form-add-product-input"
+            />
+            {errors.name && (
+              <p className="form-error">Nazwa produktu jest wymagana</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="category" className="form-add-product-title">
+              Rodzaj produktu
+            </label>
+            <select
+              id="category"
+              {...register("category", { required: true })}
+              className="form-add-product-input"
+            >
+              <option value="">Wybierz rodzaj</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            {errors.category && (
+              <p className="form-error">Rodzaj produktu jest wymagana</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="description" className="form-add-product-title">
+              Opis produktu
+            </label>
+            <textarea
+              id="description"
+              {...register("description", { required: true })}
+              className=" w-96 h-32 border-2 border-gray-400 rounded-lg bg-transparent p-4"
+            />
+            {errors.description && (
+              <p className="form-error">Opis produktu jest wymagana</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="description" className="form-add-product-title">
+              Cena produktu
+            </label>
+            <input
+              type="number"
+              step=".01"
+              min="0"
+              id="price"
+              {...register("price", { required: true })}
+              className="form-add-product-input"
+            />
+            {errors.description && (
+              <p className="form-error">Cena produktu jest wymagana</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="description" className="form-add-product-title">
+              Ilość produktu
+            </label>
+            <input
+              type="number"
+              id="quantity"
+              min="0"
+              {...register("quantity", { required: true })}
+              className="form-add-product-input"
+            />
+            {errors.quantity && (
+              <p className="form-error">Cena produktu jest wymagana</p>
+            )}
+          </div>
+          <button className="w-96 text-white form-btn mt-12">Dodaj</button>
         </div>
       </div>
-      <div className="w-full h-full bg-green-700">
+      <div className="h-full max-w-upload-image">
+        <p className="form-add-product-title mt-8 mb-2">Zdjęcie produktu</p>
         {imageSrc && (
-          <div>
-            <h3>Podgląd zdjęcia:</h3>
-            <div className="relative">
-              <img
-                src={imageSrc}
-                alt="Podgląd zdjęcia"
-                width={256}
-                height={256}
-              />
-              <div
-                onClick={() => {
-                  setImageSrc(null);
-                  reset(
-                    { image: null },
-                    {
-                      keepErrors: true,
-                    }
-                  );
-                }}
-                className="absolute top-0 right-0 text-2xl font-bold"
-              >
-                X
-              </div>
+          <div className="relative">
+            <img
+              src={imageSrc}
+              alt="Podgląd zdjęcia"
+              width={256}
+              height={256}
+              className="upload-image-size object-cover"
+            />
+            <div
+              onClick={() => {
+                setImageSrc(null);
+                reset({ image: null });
+              }}
+              className="absolute top-2 right-4 text-2xl font-bold text-trash cursor-pointer hover:animate-wiggle"
+            >
+              X
             </div>
           </div>
         )}
@@ -177,9 +202,13 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
           onChange={handleImageChange}
           className={`${imageSrc ? "hidden" : ""}`}
         />
-        {errors.name && (
-          <p className="form-error">Zdjęcie produktu jest wymagana</p>
+        {errors.image && (
+          <p className="form-error mt-2">Zdjęcie produktu jest wymagana</p>
         )}
+        <p className="font-raleway font-medium mt-6">
+          Dodaj zdjęcie JPEG lub PNG mniejsze niż 2MB. Zalecany rozmiar zdjęcia:
+          256px x 256px
+        </p>
       </div>
     </form>
   );

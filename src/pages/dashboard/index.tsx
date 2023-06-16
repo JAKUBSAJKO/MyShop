@@ -17,7 +17,7 @@ export default function Dashboard({ categories }: DashboardProps) {
   const [title, setTitle] = useState("Strona główna");
 
   return (
-    <div className="w-full h-screen bg-gray-900 flex">
+    <div className="w-full min-h-screen bg-gray-900 flex">
       <div className="w-64 bg-gray-800 shadow-2xl flex flex-col">
         <div className="flex justify-center items-center my-12">
           <Link href={routes.home}>
@@ -32,7 +32,7 @@ export default function Dashboard({ categories }: DashboardProps) {
       </div>
       <div className="flex-1 h-full w-auto flex flex-col">
         <div className="w-full h-16 bg-gray-800"></div>
-        <div className="w-full h-full p-8 flex flex-col">
+        <div className="w-full h-full p-12 flex flex-col">
           <h2 className="text-2xl text-white font-raleway font-normal mb-4">
             {title}
           </h2>

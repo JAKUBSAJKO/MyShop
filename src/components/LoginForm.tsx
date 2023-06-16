@@ -70,9 +70,7 @@ export default function LoginForm() {
         />
         {errors.password && <p className="form-error">Hasło jest wymagane</p>}
       </div>
-      <button className="bg-orange-500 font-bold py-3 rounded-lg mt-5 hover:bg-orange-600 hover:scale-105">
-        Zaloguj się
-      </button>
+      <button className="form-btn">Zaloguj się</button>
       {error ? <p className="form-error">{error}</p> : null}
     </form>
   );
