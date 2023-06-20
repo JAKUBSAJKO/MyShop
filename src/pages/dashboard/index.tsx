@@ -8,6 +8,7 @@ import Nav from "@/components/dashboard/Nav";
 import { dashboard } from "../../../constants";
 import { Category } from "../../../types";
 import { routes } from "../../../routes/routes";
+import Modal from "@/components/Modal";
 
 interface DashboardProps {
   categories: Category[];
@@ -15,6 +16,7 @@ interface DashboardProps {
 
 export default function Dashboard({ categories }: DashboardProps) {
   const [title, setTitle] = useState("Strona główna");
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <div className="w-full min-h-screen bg-gray-900 flex">
@@ -37,6 +39,23 @@ export default function Dashboard({ categories }: DashboardProps) {
             {title}
           </h2>
           <DashboardWrapper>
+            <button onClick={() => setOpenModal(true)}>Open</button>
+            {openModal && (
+              <Modal
+                isOpen={openModal}
+                handleClose={() => setOpenModal(!openModal)}
+              >
+                <div className="w-full h-full flex flex-col">
+                  <h3>Test</h3>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Facilis, amet iure. Harum beatae praesentium cumque
+                    provident eos earum similique quas officiis necessitatibus
+                    hic sequi illo magnam, est omnis quod perferendis?
+                  </p>
+                </div>
+              </Modal>
+            )}
             {title === dashboard.home ? (
               <div>
                 <h2>Strona główna</h2>
