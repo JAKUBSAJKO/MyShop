@@ -21,6 +21,7 @@ interface AddProductFormProps {
 
 export default function AddProductForm({ categories }: AddProductFormProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const {
     register,
@@ -61,6 +62,12 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
+    const fileSizeLimit = 2 * 1024 * 1024; // 2MB
+
+    if (file && file.size > fileSizeLimit) {
+      setFileError("Przekroczono limit wielkości pliku.");
+    }
+
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -169,7 +176,14 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
               <p className="form-error">Cena produktu jest wymagana</p>
             )}
           </div>
-          <button className="w-96 text-white form-btn mt-12">Dodaj</button>
+          <button
+            className={`w-96 text-white mt-12 ${
+              fileError ? "form-btn-disabled" : "form-btn"
+            }`}
+            disabled={fileError !== null}
+          >
+            Dodaj
+          </button>
         </div>
       </div>
       <div className="h-full max-w-upload-image">
@@ -187,6 +201,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
               onClick={() => {
                 setImageSrc(null);
                 reset({ image: null });
+                setFileError(null);
               }}
               className="absolute top-2 right-4 text-2xl font-bold text-trash cursor-pointer hover:animate-wiggle"
             >
@@ -197,7 +212,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
         <input
           type="file"
           id="image"
-          accept="image/*"
+          accept="image/jpeg, image/png"
           {...register("image", { required: true })}
           onChange={handleImageChange}
           className={`${
@@ -207,8 +222,9 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
           }`}
         />
         {errors.image && (
-          <p className="form-error mt-2">Zdjęcie produktu jest wymagana</p>
+          <p className="form-error mt-2">Zdjęcie produktu jest wymagane</p>
         )}
+        {fileError ? <p className="form-error mt-2">{fileError}</p> : null}
         <p className="font-raleway font-medium mt-6">
           Dodaj zdjęcie JPEG lub PNG mniejsze niż 2MB. Zalecany rozmiar zdjęcia:
           256px x 256px

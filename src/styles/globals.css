@@ -58,6 +58,10 @@ p {
   @apply bg-orange-500 font-bold py-3 rounded-lg mt-5 hover:bg-orange-600 hover:scale-105;
 }
 
+.form-btn-disabled {
+  @apply bg-gray-400 font-bold py-3 rounded-lg mt-5;
+}
+
 .form-add-product-input {
   @apply w-96 h-12 border-2 border-gray-400 rounded-lg bg-transparent pl-4;
 }
