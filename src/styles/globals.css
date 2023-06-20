@@ -70,6 +70,14 @@ p {
   @apply w-64 h-64 rounded-2xl;
 }
 
+.input-file-custom {
+  @apply border-gray-700;
+}
+
+.input-file-custom::file-selector-button {
+  @apply border-gray-700 bg-gray-700;
+}
+
 @layer utilities {
   @variants responsive {
     /* Hide scrollbar for Chrome, Safari and Opera */

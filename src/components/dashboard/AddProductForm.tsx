@@ -200,7 +200,11 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
           accept="image/*"
           {...register("image", { required: true })}
           onChange={handleImageChange}
-          className={`${imageSrc ? "hidden" : ""}`}
+          className={`${
+            imageSrc
+              ? "hidden"
+              : "file-input file-input-bordered w-72 max-w-sm file-input-primary input-file-custom"
+          }`}
         />
         {errors.image && (
           <p className="form-error mt-2">Zdjęcie produktu jest wymagana</p>
