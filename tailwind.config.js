@@ -27,6 +27,7 @@ module.exports = {
       spacing: {
         "card-420": "26.25rem",
         "add-product": "32rem",
+        modal: "512px",
       },
       maxWidth: {
         "upload-image": "256px",

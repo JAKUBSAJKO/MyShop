@@ -4,11 +4,11 @@ import Link from "next/link";
 import AddProduct from "@/components/dashboard/AddProduct";
 import DashboardWrapper from "@/components/DashboardWrapper";
 import Nav from "@/components/dashboard/Nav";
+import AddProductModal from "@/components/modals/AddProductModal";
 
 import { dashboard } from "../../../constants";
 import { Category } from "../../../types";
 import { routes } from "../../../routes/routes";
-import Modal from "@/components/Modal";
 
 interface DashboardProps {
   categories: Category[];
@@ -41,20 +41,11 @@ export default function Dashboard({ categories }: DashboardProps) {
           <DashboardWrapper>
             <button onClick={() => setOpenModal(true)}>Open</button>
             {openModal && (
-              <Modal
+              <AddProductModal
                 isOpen={openModal}
                 handleClose={() => setOpenModal(!openModal)}
-              >
-                <div className="w-full h-full flex flex-col">
-                  <h3>Test</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Facilis, amet iure. Harum beatae praesentium cumque
-                    provident eos earum similique quas officiis necessitatibus
-                    hic sequi illo magnam, est omnis quod perferendis?
-                  </p>
-                </div>
-              </Modal>
+                setTitle={setTitle}
+              />
             )}
             {title === dashboard.home ? (
               <div>

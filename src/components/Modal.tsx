@@ -1,13 +1,33 @@
 import { ReactNode, useEffect } from "react";
+import { Raleway, Roboto } from "next/font/google";
+
 import ReactPortal from "./ReactPortal";
+
+const raleway = Raleway({
+  weight: ["300", "400", "500", "600", "700", "900"],
+  subsets: ["latin"],
+  variable: "--font-raleway",
+});
+
+const roboto = Roboto({
+  weight: ["300", "400", "500", "700", "900"],
+  subsets: ["latin"],
+  variable: "--font-roboto",
+});
 
 interface ModalProps {
   children: ReactNode;
   isOpen: boolean;
   handleClose: () => void;
+  isButton?: boolean;
 }
 
-export default function Modal({ children, isOpen, handleClose }: ModalProps) {
+export default function Modal({
+  children,
+  isOpen,
+  handleClose,
+  isButton = false,
+}: ModalProps) {
   // close modal on escape key press
   useEffect(() => {
     const closeOnEscapeKey = (e: KeyboardEvent) =>
@@ -30,15 +50,19 @@ export default function Modal({ children, isOpen, handleClose }: ModalProps) {
     <ReactPortal wrapperId="react-portal-modal-container">
       <>
         <div className="fixed top-0 left-0 w-screen h-screen bg-neutral-800 opacity-50 z-10" />
-        <div className="fixed w-96 h-64 bg-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl z-20">
-          <div className="w-full h-full bg-yellow-500 rounded-xl p-4">
+        <div
+          className={`${raleway.variable} ${roboto.variable} fixed w-modal top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 `}
+        >
+          <div className="w-full h-full">
             <>
-              <button
-                className="w-5 h-5 bg-red-700 absolute top-0 right-0"
-                onClick={handleClose}
-              >
-                Close
-              </button>
+              {isButton === true ? (
+                <button
+                  className="w-5 h-5 bg-red-700 absolute top-0 right-0"
+                  onClick={handleClose}
+                >
+                  Close
+                </button>
+              ) : null}
               {children}
             </>
           </div>
