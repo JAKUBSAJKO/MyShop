@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { ImArrowUp2 } from "react-icons/im";
 
 import { supabase } from "../../../lib/supabase/supabaseClient";
 import { Category } from "../../../types";
@@ -17,9 +16,13 @@ interface AddNewProduct {
 
 interface AddProductFormProps {
   categories: Category[];
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function AddProductForm({ categories }: AddProductFormProps) {
+export default function AddProductForm({
+  categories,
+  setOpenModal,
+}: AddProductFormProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
 
@@ -55,9 +58,14 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
       },
     });
 
-    const newData = await newProduct.json();
+    const { message } = await newProduct.json();
 
-    console.log(newData);
+    if (message === "good") {
+      reset();
+      setImageSrc(null);
+      setFileError(null);
+      setOpenModal((prev) => !prev);
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

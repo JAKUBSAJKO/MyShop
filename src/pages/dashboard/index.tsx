@@ -39,7 +39,6 @@ export default function Dashboard({ categories }: DashboardProps) {
             {title}
           </h2>
           <DashboardWrapper>
-            <button onClick={() => setOpenModal(true)}>Open</button>
             {openModal && (
               <AddProductModal
                 isOpen={openModal}
@@ -52,7 +51,7 @@ export default function Dashboard({ categories }: DashboardProps) {
                 <h2>Strona główna</h2>
               </div>
             ) : title === dashboard.addProduct ? (
-              <AddProduct categories={categories} />
+              <AddProduct categories={categories} setOpenModal={setOpenModal} />
             ) : null}
           </DashboardWrapper>
         </div>
