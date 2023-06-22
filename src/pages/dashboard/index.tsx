@@ -1,14 +1,17 @@
 import { useState } from "react";
 import Link from "next/link";
+import { useQuery } from "react-query";
 
 import AddProduct from "@/components/dashboard/AddProduct";
 import DashboardWrapper from "@/components/DashboardWrapper";
 import Nav from "@/components/dashboard/Nav";
 import AddProductModal from "@/components/modals/AddProductModal";
+import AllProducts from "@/components/dashboard/AllProducts";
 
 import { dashboard } from "../../../constants";
-import { Category } from "../../../types";
+import { Category, Product } from "../../../types";
 import { routes } from "../../../routes/routes";
+import { getProducts } from "../../../services/services";
 
 interface DashboardProps {
   categories: Category[];
@@ -17,6 +20,8 @@ interface DashboardProps {
 export default function Dashboard({ categories }: DashboardProps) {
   const [title, setTitle] = useState("Strona główna");
   const [openModal, setOpenModal] = useState(false);
+
+  const { data: products } = useQuery<Product[]>("products", getProducts);
 
   return (
     <div className="w-full min-h-screen bg-gray-900 flex">
@@ -52,6 +57,8 @@ export default function Dashboard({ categories }: DashboardProps) {
               </div>
             ) : title === dashboard.addProduct ? (
               <AddProduct categories={categories} setOpenModal={setOpenModal} />
+            ) : title === dashboard.allProducts ? (
+              <AllProducts products={products} />
             ) : null}
           </DashboardWrapper>
         </div>

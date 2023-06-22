@@ -6,7 +6,7 @@ export interface Product {
   price_id: string;
   quantity: number;
   image: string;
-  createdAt: Date;
+  created_at: string;
   categoryId: string;
   Category: Category;
 }
