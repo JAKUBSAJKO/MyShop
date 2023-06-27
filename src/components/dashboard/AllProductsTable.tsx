@@ -7,17 +7,21 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { FaTrashAlt } from "react-icons/fa";
 
 import { Category, Product } from "../../../types";
+import { useEffect, useState } from "react";
 
 interface AllProductsTableProps {
   products: Product[] | undefined;
 }
 
 interface TableProducts {
+  id: string;
   image: string;
   name: string;
   price: number;
+  price_id: string;
   quantity: number;
   Category: Category;
   created_at: Date;
@@ -56,17 +60,11 @@ const columns = [
     header: "Data dodania",
     cell: (info) => format(info.getValue<Date>(), "dd.MM.yyyy"),
   }),
+  columnHelper.accessor("id", { id: "delete", header: "Usuń" }),
 ];
 
 export default function AllProductsTable({ products }: AllProductsTableProps) {
-  const data: TableProducts[] = (products || []).map((product: Product) => ({
-    image: product.image,
-    name: product.name,
-    price: product.price,
-    quantity: product.quantity,
-    Category: product.Category,
-    created_at: new Date(product.created_at),
-  }));
+  const [data, setData] = useState<TableProducts[]>([]);
 
   const table = useReactTable({
     columns,
@@ -75,6 +73,27 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
+
+  const deleteProduct = (productId: string, priceId: string) => {
+    console.log(productId);
+    console.log(priceId);
+  };
+
+  useEffect(() => {
+    const data: TableProducts[] = (products || []).map((product: Product) => {
+      return {
+        id: product.id,
+        image: product.image,
+        name: product.name,
+        price: product.price,
+        price_id: product.price_id,
+        quantity: product.quantity,
+        Category: product.Category,
+        created_at: new Date(product.created_at),
+      };
+    });
+    setData(data);
+  }, [products]);
 
   return (
     <div className="overflow-x-auto">
@@ -100,7 +119,19 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
             <tr key={row.id} className="hover text-white">
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} className="bg-gray-700">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  {cell.column.id === "delete" ? (
+                    <FaTrashAlt
+                      onClick={() =>
+                        deleteProduct(
+                          cell.row.original.id,
+                          cell.row.original.price_id
+                        )
+                      }
+                      className="cursor-pointer hover:bg-orange-600"
+                    />
+                  ) : (
+                    flexRender(cell.column.columnDef.cell, cell.getContext())
+                  )}
                 </td>
               ))}
             </tr>
