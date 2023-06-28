@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -10,7 +11,7 @@ import { format } from "date-fns";
 import { FaTrashAlt } from "react-icons/fa";
 
 import { Category, Product } from "../../../types";
-import { useEffect, useState } from "react";
+import DeleteProductModal from "../modals/DeleteProductModal";
 
 interface AllProductsTableProps {
   products: Product[] | undefined;
@@ -25,6 +26,11 @@ interface TableProducts {
   quantity: number;
   Category: Category;
   created_at: Date;
+}
+
+export interface ProductToDelete {
+  productId: string;
+  priceId: string;
 }
 
 const columnHelper = createColumnHelper<TableProducts>();
@@ -65,6 +71,11 @@ const columns = [
 
 export default function AllProductsTable({ products }: AllProductsTableProps) {
   const [data, setData] = useState<TableProducts[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<ProductToDelete>({
+    productId: "",
+    priceId: "",
+  });
 
   const table = useReactTable({
     columns,
@@ -75,8 +86,11 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
   });
 
   const deleteProduct = (productId: string, priceId: string) => {
-    console.log(productId);
-    console.log(priceId);
+    setProductToDelete({
+      productId,
+      priceId,
+    });
+    setOpenModal(true);
   };
 
   useEffect(() => {
@@ -96,48 +110,58 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
   }, [products]);
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table w-full [&_tr.hover:hover_*]:!bg-orange-500">
-        <thead>
-          {table.getHeaderGroups().map((headerGroups) => (
-            <tr key={headerGroups.id}>
-              {headerGroups.headers.map((header) => (
-                <th key={header.id} className="bg-gray-800">
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="hover text-white">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="bg-gray-700">
-                  {cell.column.id === "delete" ? (
-                    <FaTrashAlt
-                      onClick={() =>
-                        deleteProduct(
-                          cell.row.original.id,
-                          cell.row.original.price_id
-                        )
-                      }
-                      className="cursor-pointer hover:bg-orange-600"
-                    />
-                  ) : (
-                    flexRender(cell.column.columnDef.cell, cell.getContext())
-                  )}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className="overflow-x-auto">
+        <table className="table w-full [&_tr.hover:hover_*]:!bg-orange-500">
+          <thead>
+            {table.getHeaderGroups().map((headerGroups) => (
+              <tr key={headerGroups.id}>
+                {headerGroups.headers.map((header) => (
+                  <th key={header.id} className="bg-gray-800">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="hover text-white">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="bg-gray-700">
+                    {cell.column.id === "delete" ? (
+                      <FaTrashAlt
+                        onClick={() =>
+                          deleteProduct(
+                            cell.row.original.id,
+                            cell.row.original.price_id
+                          )
+                        }
+                        className="cursor-pointer hover:bg-orange-600"
+                      />
+                    ) : (
+                      flexRender(cell.column.columnDef.cell, cell.getContext())
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {openModal && (
+        <DeleteProductModal
+          isOpen={openModal}
+          handleClose={() => setOpenModal(!openModal)}
+          isButton={true}
+          productToDelete={productToDelete}
+        />
+      )}
+    </>
   );
 }
