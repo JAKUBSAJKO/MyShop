@@ -1,4 +1,5 @@
 import axios from "axios";
+import { routes } from "../routes/routes";
 
 interface UpdateQuantity {
   productId: string;
@@ -22,4 +23,8 @@ export const updateQuantity = async ({
     currentQuantity,
   });
   return response.data;
+};
+
+export const deleteProduct = async (productId: string) => {
+  return await api.delete(`${routes.dashboardEnd}${productId}`);
 };

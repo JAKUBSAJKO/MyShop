@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import {
   createColumnHelper,
   useReactTable,
@@ -12,6 +13,7 @@ import { FaTrashAlt } from "react-icons/fa";
 
 import { Category, Product } from "../../../types";
 import DeleteProductModal from "../modals/DeleteProductModal";
+import { deleteProduct } from "../../../services/services";
 
 interface AllProductsTableProps {
   products: Product[] | undefined;
@@ -26,11 +28,6 @@ interface TableProducts {
   quantity: number;
   Category: Category;
   created_at: Date;
-}
-
-export interface ProductToDelete {
-  productId: string;
-  priceId: string;
 }
 
 const columnHelper = createColumnHelper<TableProducts>();
@@ -72,9 +69,13 @@ const columns = [
 export default function AllProductsTable({ products }: AllProductsTableProps) {
   const [data, setData] = useState<TableProducts[]>([]);
   const [openModal, setOpenModal] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<ProductToDelete>({
-    productId: "",
-    priceId: "",
+  const [productIdToDelete, setProductIdToDelete] = useState("");
+
+  const queryClient = useQueryClient();
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: () => deleteProduct(productIdToDelete),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
   });
 
   const table = useReactTable({
@@ -85,11 +86,8 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const deleteProduct = (productId: string, priceId: string) => {
-    setProductToDelete({
-      productId,
-      priceId,
-    });
+  const pickProductTodelete = (productId: string) => {
+    setProductIdToDelete(productId);
     setOpenModal(true);
   };
 
@@ -129,29 +127,35 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
               </tr>
             ))}
           </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="hover text-white">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="bg-gray-700">
-                    {cell.column.id === "delete" ? (
-                      <FaTrashAlt
-                        onClick={() =>
-                          deleteProduct(
-                            cell.row.original.id,
-                            cell.row.original.price_id
-                          )
-                        }
-                        className="cursor-pointer hover:bg-orange-600"
-                      />
-                    ) : (
-                      flexRender(cell.column.columnDef.cell, cell.getContext())
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
+          {isLoading ? (
+            <p className="w-vw h-64 bg-gray-700 text-4xl text-orange-500">
+              Loading...
+            </p>
+          ) : (
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id} className="hover text-white">
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="bg-gray-700">
+                      {cell.column.id === "delete" ? (
+                        <FaTrashAlt
+                          onClick={() =>
+                            pickProductTodelete(cell.row.original.id)
+                          }
+                          className="cursor-pointer hover:bg-orange-600"
+                        />
+                      ) : (
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
       {openModal && (
@@ -159,7 +163,8 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
           isOpen={openModal}
           handleClose={() => setOpenModal(!openModal)}
           isButton={true}
-          productToDelete={productToDelete}
+          productToDelete={productIdToDelete}
+          mutate={mutate}
         />
       )}
     </>
