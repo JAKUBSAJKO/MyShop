@@ -1,6 +1,8 @@
 import { UseMutateFunction } from "react-query";
-import Modal from "../Modal";
 import { AxiosResponse } from "axios";
+import Modal from "../Modal";
+import { Product } from "../../../types";
+import { supabase } from "../../../lib/supabase/supabaseClient";
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -8,6 +10,7 @@ interface AddProductModalProps {
   isButton?: boolean;
   productToDelete: string;
   mutate: UseMutateFunction<AxiosResponse<any, any>, unknown, void, unknown>;
+  products: Product[] | undefined;
 }
 
 export default function DeleteProductModal({
@@ -15,10 +18,27 @@ export default function DeleteProductModal({
   handleClose,
   isButton = false,
   mutate,
+  productToDelete,
+  products,
 }: AddProductModalProps) {
   const deleteProduct = () => {
     mutate();
+    deleteProductImageFromStorage();
     handleClose();
+  };
+
+  const deleteProductImageFromStorage = async () => {
+    const productPickedToDelete = products?.filter(
+      (product) => product.id === productToDelete
+    );
+
+    if (typeof productPickedToDelete !== "undefined") {
+      const productURL = productPickedToDelete[0].image!;
+      const fileName = productURL?.substring(productURL?.lastIndexOf("/") + 1);
+      const { data, error } = await supabase.storage
+        .from("myshop")
+        .remove([`products/${fileName}`]);
+    }
   };
 
   return (

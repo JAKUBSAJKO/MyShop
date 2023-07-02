@@ -39,9 +39,9 @@ export default async function handler(
         }
       );
 
-      console.log(productIdStripe, "<----------------------------------------");
-
-      res.status(200).json({ message: "Product has been deleted" });
+      res.status(200).json({
+        message: "Product has been deleted",
+      });
     } catch (error) {
       res.status(400).json({
         message: "Product doesn't exist in database. Please refresh page!",

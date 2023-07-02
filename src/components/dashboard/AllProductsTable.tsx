@@ -70,12 +70,15 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
   const [data, setData] = useState<TableProducts[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState("");
+  const [fileName, setFileName] = useState("");
 
   const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation({
     mutationFn: () => deleteProduct(productIdToDelete),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
   });
 
   const table = useReactTable({
@@ -165,6 +168,7 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
           isButton={true}
           productToDelete={productIdToDelete}
           mutate={mutate}
+          products={products}
         />
       )}
     </>
