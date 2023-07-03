@@ -3,28 +3,35 @@ import { AxiosResponse } from "axios";
 import Modal from "../Modal";
 import { Product } from "../../../types";
 import { supabase } from "../../../lib/supabase/supabaseClient";
+import { Dispatch, SetStateAction } from "react";
 
-interface AddProductModalProps {
+interface BeforeDeleteProductModalProps {
   isOpen: boolean;
   handleClose: () => void;
   isButton?: boolean;
   productToDelete: string;
   mutate: UseMutateFunction<AxiosResponse<any, any>, unknown, void, unknown>;
   products: Product[] | undefined;
+  setOpenModalAfterDeleteProduct: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function DeleteProductModal({
+export default function BeforeDeleteProductModal({
   isOpen,
   handleClose,
   isButton = false,
   mutate,
   productToDelete,
   products,
-}: AddProductModalProps) {
-  const deleteProduct = () => {
-    mutate();
-    deleteProductImageFromStorage();
+  setOpenModalAfterDeleteProduct,
+}: BeforeDeleteProductModalProps) {
+  const deleteProduct = async () => {
+    await mutate();
+    await deleteProductImageFromStorage();
     handleClose();
+    setOpenModalAfterDeleteProduct(true);
+    setTimeout(() => {
+      setOpenModalAfterDeleteProduct(false);
+    }, 3000);
   };
 
   const deleteProductImageFromStorage = async () => {

@@ -12,8 +12,9 @@ import { format } from "date-fns";
 import { FaTrashAlt } from "react-icons/fa";
 
 import { Category, Product } from "../../../types";
-import DeleteProductModal from "../modals/DeleteProductModal";
 import { deleteProduct } from "../../../services/services";
+import BeforeDeleteProductModal from "../modals/BeforeDeleteProductModal";
+import AfterDeleteProductModal from "../modals/AfterDeleteProductModal";
 
 interface AllProductsTableProps {
   products: Product[] | undefined;
@@ -69,8 +70,9 @@ const columns = [
 export default function AllProductsTable({ products }: AllProductsTableProps) {
   const [data, setData] = useState<TableProducts[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [openModalAfterDeleteProduct, setOpenModalAfterDeleteProduct] =
+    useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState("");
-  const [fileName, setFileName] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -162,12 +164,21 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
         </table>
       </div>
       {openModal && (
-        <DeleteProductModal
+        <BeforeDeleteProductModal
           isOpen={openModal}
           handleClose={() => setOpenModal(!openModal)}
           productToDelete={productIdToDelete}
           mutate={mutate}
           products={products}
+          setOpenModalAfterDeleteProduct={setOpenModalAfterDeleteProduct}
+        />
+      )}
+      {openModalAfterDeleteProduct && (
+        <AfterDeleteProductModal
+          isOpen={openModalAfterDeleteProduct}
+          handleClose={() =>
+            setOpenModalAfterDeleteProduct(!openModalAfterDeleteProduct)
+          }
         />
       )}
     </>
