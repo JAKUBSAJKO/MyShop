@@ -43,16 +43,18 @@ export default function DeleteProductModal({
 
   return (
     <Modal isOpen={isOpen} handleClose={handleClose} isButton={isButton}>
-      <div className="w-full h-full flex flex-col items-center gap-8 py-8 bg-nav-grey-200 rounded-2xl">
-        <p className="font-raleway text-xl text-white font-normal">
+      <div className="w-full h-full flex flex-col items-center gap-8 py-12 bg-nav-grey-200 rounded-2xl">
+        <p className="font-raleway text-xl text-white font-medium">
           Czy napewno chcesz usunać produkt?
         </p>
-        <button className="modal-btn" onClick={() => handleClose()}>
-          Nie
-        </button>
-        <button className="modal-btn" onClick={deleteProduct}>
-          Tak
-        </button>
+        <div className="flex gap-8">
+          <button className="modal-btn-medium" onClick={() => handleClose()}>
+            Nie
+          </button>
+          <button className="modal-btn-medium" onClick={deleteProduct}>
+            Tak
+          </button>
+        </div>
       </div>
     </Modal>
   );

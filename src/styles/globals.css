@@ -86,6 +86,10 @@ p {
   @apply font-raleway text-white font-medium bg-orange-500 px-4 py-2 rounded-lg hover:bg-orange-600;
 }
 
+.modal-btn-medium {
+  @apply font-raleway text-white font-medium bg-orange-500 px-8 py-2 rounded-lg hover:bg-orange-600;
+}
+
 @layer utilities {
   @variants responsive {
     /* Hide scrollbar for Chrome, Safari and Opera */

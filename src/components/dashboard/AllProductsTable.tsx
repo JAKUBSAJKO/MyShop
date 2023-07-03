@@ -165,7 +165,6 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
         <DeleteProductModal
           isOpen={openModal}
           handleClose={() => setOpenModal(!openModal)}
-          isButton={true}
           productToDelete={productIdToDelete}
           mutate={mutate}
           products={products}

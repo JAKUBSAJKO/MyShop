@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { Raleway, Roboto } from "next/font/google";
 
 import ReactPortal from "./ReactPortal";
+import { IoClose } from "react-icons/io5";
 
 const raleway = Raleway({
   weight: ["300", "400", "500", "600", "700", "900"],
@@ -57,10 +58,10 @@ export default function Modal({
             <>
               {isButton === true ? (
                 <button
-                  className="w-5 h-5 bg-red-700 absolute top-0 right-0"
+                  className="w-5 h-5 absolute top-2 right-6"
                   onClick={handleClose}
                 >
-                  Close
+                  <IoClose className="text-4xl font-bold text-red-700 hover:animate-wiggle" />
                 </button>
               ) : null}
               {children}
