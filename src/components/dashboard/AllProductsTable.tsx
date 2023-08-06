@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
 import {
   createColumnHelper,
-  useReactTable,
+  flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  flexRender,
+  useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
+import { useMutation, useQueryClient } from "react-query";
 
-import { Category, Product } from "../../../types";
 import { deleteProduct } from "../../../services/services";
-import BeforeDeleteProductModal from "../modals/BeforeDeleteProductModal";
+import { Category, Product } from "../../../types";
 import AfterDeleteProductModal from "../modals/AfterDeleteProductModal";
+import BeforeDeleteProductModal from "../modals/BeforeDeleteProductModal";
 
 interface AllProductsTableProps {
   products: Product[] | undefined;
@@ -37,15 +37,7 @@ const columns = [
   columnHelper.accessor((row) => row.image, {
     id: "image",
     header: "",
-    cell: (info) => (
-      <img
-        src={info.getValue()}
-        alt=""
-        width={40}
-        height={40}
-        className="rounded-md"
-      />
-    ),
+    cell: (info) => <img src={info.getValue()} alt="" width={40} height={40} className="rounded-md" />,
   }),
   columnHelper.accessor("name", {
     header: "Nazwa",
@@ -70,8 +62,7 @@ const columns = [
 export default function AllProductsTable({ products }: AllProductsTableProps) {
   const [data, setData] = useState<TableProducts[]>([]);
   const [openModal, setOpenModal] = useState(false);
-  const [openModalAfterDeleteProduct, setOpenModalAfterDeleteProduct] =
-    useState(false);
+  const [openModalAfterDeleteProduct, setOpenModalAfterDeleteProduct] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState("");
 
   const queryClient = useQueryClient();
@@ -121,21 +112,14 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
               <tr key={headerGroups.id}>
                 {headerGroups.headers.map((header) => (
                   <th key={header.id} className="bg-gray-800">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
               </tr>
             ))}
           </thead>
           {isLoading ? (
-            <p className="w-vw h-64 bg-gray-700 text-4xl text-orange-500">
-              Loading...
-            </p>
+            <p className="w-vw h-64 bg-gray-700 text-4xl text-orange-500">Loading...</p>
           ) : (
             <tbody>
               {table.getRowModel().rows.map((row) => (
@@ -144,16 +128,11 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
                     <td key={cell.id} className="bg-gray-700">
                       {cell.column.id === "delete" ? (
                         <FaTrashAlt
-                          onClick={() =>
-                            pickProductTodelete(cell.row.original.id)
-                          }
+                          onClick={() => pickProductTodelete(cell.row.original.id)}
                           className="cursor-pointer hover:bg-orange-600"
                         />
                       ) : (
-                        flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )
+                        flexRender(cell.column.columnDef.cell, cell.getContext())
                       )}
                     </td>
                   ))}
@@ -176,9 +155,7 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
       {openModalAfterDeleteProduct && (
         <AfterDeleteProductModal
           isOpen={openModalAfterDeleteProduct}
-          handleClose={() =>
-            setOpenModalAfterDeleteProduct(!openModalAfterDeleteProduct)
-          }
+          handleClose={() => setOpenModalAfterDeleteProduct(!openModalAfterDeleteProduct)}
         />
       )}
     </>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { routes } from "../routes/routes";
+import { NewProduct } from "../types";
 
 interface UpdateQuantity {
   productId: string;
@@ -15,10 +16,7 @@ export const getProducts = async () => {
   return response.data;
 };
 
-export const updateQuantity = async ({
-  productId,
-  currentQuantity,
-}: UpdateQuantity) => {
+export const updateQuantity = async ({ productId, currentQuantity }: UpdateQuantity) => {
   const response = await api.patch(`/api/products/${productId}`, {
     currentQuantity,
   });
@@ -27,4 +25,18 @@ export const updateQuantity = async ({
 
 export const deleteProduct = async (productId: string) => {
   return await api.delete(`${routes.dashboardEnd}${productId}`);
+};
+
+export const addNewProduct = async (product: NewProduct) => {
+  const newProduct = await fetch(routes.addProduct, {
+    method: "POST",
+    body: JSON.stringify(product),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const res = await newProduct.json();
+
+  return res;
 };

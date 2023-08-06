@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 
+import { useMutation, useQueryClient } from "react-query";
 import { supabase } from "../../../lib/supabase/supabaseClient";
+import { addNewProduct } from "../../../services/services";
 import { Category } from "../../../types";
-import { routes } from "../../../routes/routes";
 
 interface AddNewProduct {
   name: string;
@@ -19,12 +20,21 @@ interface AddProductFormProps {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function AddProductForm({
-  categories,
-  setOpenModal,
-}: AddProductFormProps) {
+export default function AddProductForm({ categories, setOpenModal }: AddProductFormProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation(addNewProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      reset();
+      setImageSrc(null);
+      setFileError(null);
+      setOpenModal((prev) => !prev);
+    },
+  });
 
   const {
     register,
@@ -49,23 +59,7 @@ export default function AddProductForm({
       categoryId: data.category,
     };
 
-    // Step 2: Add product to Stripe and get price_id
-    const newProduct = await fetch(routes.addProduct, {
-      method: "POST",
-      body: JSON.stringify(product),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const { message } = await newProduct.json();
-
-    if (message === "good") {
-      reset();
-      setImageSrc(null);
-      setFileError(null);
-      setOpenModal((prev) => !prev);
-    }
+    await mutate(product);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,9 +82,7 @@ export default function AddProductForm({
   };
 
   const uploadImg = async (image: File) => {
-    const { data, error } = await supabase.storage
-      .from("myshop")
-      .upload(`products/${image?.name}`, image);
+    const { data, error } = await supabase.storage.from("myshop").upload(`products/${image?.name}`, image);
 
     if (data) {
       return data;
@@ -110,25 +102,14 @@ export default function AddProductForm({
             <label htmlFor="name" className="form-add-product-title">
               Nazwa produktu
             </label>
-            <input
-              type="text"
-              id="name"
-              {...register("name", { required: true })}
-              className="form-add-product-input"
-            />
-            {errors.name && (
-              <p className="form-error">Nazwa produktu jest wymagana</p>
-            )}
+            <input type="text" id="name" {...register("name", { required: true })} className="form-add-product-input" />
+            {errors.name && <p className="form-error">Nazwa produktu jest wymagana</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="category" className="form-add-product-title">
               Rodzaj produktu
             </label>
-            <select
-              id="category"
-              {...register("category", { required: true })}
-              className="form-add-product-input"
-            >
+            <select id="category" {...register("category", { required: true })} className="form-add-product-input">
               <option value="">Wybierz rodzaj</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
@@ -136,9 +117,7 @@ export default function AddProductForm({
                 </option>
               ))}
             </select>
-            {errors.category && (
-              <p className="form-error">Rodzaj produktu jest wymagana</p>
-            )}
+            {errors.category && <p className="form-error">Rodzaj produktu jest wymagana</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="description" className="form-add-product-title">
@@ -149,9 +128,7 @@ export default function AddProductForm({
               {...register("description", { required: true })}
               className=" w-96 h-32 border-2 border-gray-400 rounded-lg bg-transparent p-4"
             />
-            {errors.description && (
-              <p className="form-error">Opis produktu jest wymagana</p>
-            )}
+            {errors.description && <p className="form-error">Opis produktu jest wymagana</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="description" className="form-add-product-title">
@@ -165,9 +142,7 @@ export default function AddProductForm({
               {...register("price", { required: true })}
               className="form-add-product-input"
             />
-            {errors.description && (
-              <p className="form-error">Cena produktu jest wymagana</p>
-            )}
+            {errors.description && <p className="form-error">Cena produktu jest wymagana</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="description" className="form-add-product-title">
@@ -180,14 +155,10 @@ export default function AddProductForm({
               {...register("quantity", { required: true })}
               className="form-add-product-input"
             />
-            {errors.quantity && (
-              <p className="form-error">Cena produktu jest wymagana</p>
-            )}
+            {errors.quantity && <p className="form-error">Cena produktu jest wymagana</p>}
           </div>
           <button
-            className={`w-96 text-white mt-12 ${
-              fileError ? "form-btn-disabled" : "form-btn"
-            }`}
+            className={`w-96 text-white mt-12 ${fileError ? "form-btn-disabled" : "form-btn"}`}
             disabled={fileError !== null}
           >
             Dodaj
@@ -224,18 +195,13 @@ export default function AddProductForm({
           {...register("image", { required: true })}
           onChange={handleImageChange}
           className={`${
-            imageSrc
-              ? "hidden"
-              : "file-input file-input-bordered w-72 max-w-sm file-input-primary input-file-custom"
+            imageSrc ? "hidden" : "file-input file-input-bordered w-72 max-w-sm file-input-primary input-file-custom"
           }`}
         />
-        {errors.image && (
-          <p className="form-error mt-2">Zdjęcie produktu jest wymagane</p>
-        )}
+        {errors.image && <p className="form-error mt-2">Zdjęcie produktu jest wymagane</p>}
         {fileError ? <p className="form-error mt-2">{fileError}</p> : null}
         <p className="font-raleway font-medium mt-6">
-          Dodaj zdjęcie JPEG lub PNG mniejsze niż 2MB. Zalecany rozmiar zdjęcia:
-          256px x 256px
+          Dodaj zdjęcie JPEG lub PNG mniejsze niż 2MB. Zalecany rozmiar zdjęcia: 256px x 256px
         </p>
       </div>
     </form>

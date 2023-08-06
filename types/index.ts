@@ -24,3 +24,12 @@ export interface ProductInBasket {
   price_id: string;
   quantity: number;
 }
+
+export interface NewProduct {
+  name: string;
+  description: string;
+  price: string;
+  quantity: number;
+  image: string;
+  categoryId: string;
+}
