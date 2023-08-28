@@ -1,17 +1,18 @@
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 import { useQuery } from "react-query";
 
-import AddProduct from "@/components/dashboard/AddProduct";
 import DashboardWrapper from "@/components/DashboardWrapper";
+import AddProduct from "@/components/dashboard/AddProduct";
+import AllProducts from "@/components/dashboard/AllProducts";
 import Nav from "@/components/dashboard/Nav";
 import AddProductModal from "@/components/modals/AddProductModal";
-import AllProducts from "@/components/dashboard/AllProducts";
 
+import Delivery from "@/components/dashboard/Delivery";
 import { dashboard } from "../../../constants";
-import { Category, Product } from "../../../types";
 import { routes } from "../../../routes/routes";
 import { getProducts } from "../../../services/services";
+import { Category, Product } from "../../../types";
 
 interface DashboardProps {
   categories: Category[];
@@ -28,9 +29,7 @@ export default function Dashboard({ categories }: DashboardProps) {
       <div className="w-64 bg-gray-800 shadow-2xl flex flex-col">
         <div className="flex justify-center items-center my-12">
           <Link href={routes.home}>
-            <h1 className="text-4xl text-white font-raleway font-bold">
-              My Shop
-            </h1>
+            <h1 className="text-4xl text-white font-raleway font-bold">My Shop</h1>
           </Link>
         </div>
         <div>
@@ -40,16 +39,10 @@ export default function Dashboard({ categories }: DashboardProps) {
       <div className="flex-1 h-full w-auto flex flex-col">
         <div className="w-full h-16 bg-gray-800"></div>
         <div className="w-full h-full p-12 flex flex-col">
-          <h2 className="text-2xl text-white font-raleway font-normal mb-4">
-            {title}
-          </h2>
+          <h2 className="text-2xl text-white font-raleway font-normal mb-4">{title}</h2>
           <DashboardWrapper>
             {openModal && (
-              <AddProductModal
-                isOpen={openModal}
-                handleClose={() => setOpenModal(!openModal)}
-                setTitle={setTitle}
-              />
+              <AddProductModal isOpen={openModal} handleClose={() => setOpenModal(!openModal)} setTitle={setTitle} />
             )}
             {title === dashboard.home ? (
               <div>
@@ -57,6 +50,8 @@ export default function Dashboard({ categories }: DashboardProps) {
               </div>
             ) : title === dashboard.addProduct ? (
               <AddProduct categories={categories} setOpenModal={setOpenModal} />
+            ) : title === dashboard.enterDelivery ? (
+              <Delivery products={products} />
             ) : title === dashboard.allProducts ? (
               <AllProducts products={products} />
             ) : null}
