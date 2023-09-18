@@ -1,8 +1,8 @@
-import { ReactNode, useEffect } from "react";
 import { Raleway, Roboto } from "next/font/google";
+import { ReactNode, useEffect } from "react";
 
-import ReactPortal from "./ReactPortal";
 import { IoClose } from "react-icons/io5";
+import ReactPortal from "./ReactPortal";
 
 const raleway = Raleway({
   weight: ["300", "400", "500", "600", "700", "900"],
@@ -23,16 +23,10 @@ interface ModalProps {
   isButton?: boolean;
 }
 
-export default function Modal({
-  children,
-  isOpen,
-  handleClose,
-  isButton = false,
-}: ModalProps) {
+export default function Modal({ children, isOpen, handleClose, isButton = false }: ModalProps) {
   // close modal on escape key press
   useEffect(() => {
-    const closeOnEscapeKey = (e: KeyboardEvent) =>
-      e.key === "Escape" ? handleClose() : null;
+    const closeOnEscapeKey = (e: KeyboardEvent) => (e.key === "Escape" ? handleClose() : null);
     document.body.addEventListener("keydown", closeOnEscapeKey);
     return () => {
       document.body.removeEventListener("keydown", closeOnEscapeKey);
@@ -50,17 +44,14 @@ export default function Modal({
   return (
     <ReactPortal wrapperId="react-portal-modal-container">
       <>
-        <div className="fixed top-0 left-0 w-screen h-screen bg-neutral-800 opacity-50 z-10" />
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black/80 z-100" />
         <div
-          className={`${raleway.variable} ${roboto.variable} fixed w-modal top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 `}
+          className={`${raleway.variable} ${roboto.variable} fixed w-modal top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-100`}
         >
           <div className="w-full h-full">
             <>
               {isButton === true ? (
-                <button
-                  className="w-5 h-5 absolute top-2 right-6"
-                  onClick={handleClose}
-                >
+                <button className="w-5 h-5 absolute top-2 right-6" onClick={handleClose}>
                   <IoClose className="text-4xl font-bold text-red-700 hover:animate-wiggle" />
                 </button>
               ) : null}

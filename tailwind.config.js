@@ -32,6 +32,9 @@ module.exports = {
       maxWidth: {
         "upload-image": "256px",
       },
+      zIndex: {
+        100: 100,
+      },
       keyframes: {
         wiggle: {
           "0%, 100%": { transform: "rotate(-3deg)" },
