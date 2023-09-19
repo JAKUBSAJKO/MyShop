@@ -8,6 +8,7 @@ import AddProductModal from "@/components/modals/AddProductModal";
 
 import Sidebar from "@/components/Sidebar";
 import Delivery from "@/components/dashboard/Delivery";
+import Home from "@/components/dashboard/Home";
 import { dashboard } from "../../../constants";
 import { getProducts } from "../../../services/services";
 import { Category, Product } from "../../../types";
@@ -33,9 +34,7 @@ export default function Dashboard({ categories }: DashboardProps) {
               <AddProductModal isOpen={openModal} handleClose={() => setOpenModal(!openModal)} setTitle={setTitle} />
             )}
             {title === dashboard.home ? (
-              <div>
-                <h2>Strona główna</h2>
-              </div>
+              <Home />
             ) : title === dashboard.addProduct ? (
               <AddProduct categories={categories} setOpenModal={setOpenModal} />
             ) : title === dashboard.enterDelivery ? (

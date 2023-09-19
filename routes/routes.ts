@@ -7,4 +7,5 @@ export const routes = {
   createUser: "/api/auth/createUser",
   dashboardEnd: "/api/dashboard/",
   addProduct: "/api/dashboard/add-product",
+  statistics: "api/dashboard/statistics",
 };
