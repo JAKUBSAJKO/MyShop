@@ -1,3 +1,10 @@
+import AllProducts from "@/components/dashboard/AllProducts";
+import WrapperDashoboard from "@/layout/WrapperDashoboard";
+
 export default function ProductsList() {
-  return <div>ProductsList</div>;
+  return (
+    <WrapperDashoboard>
+      <AllProducts />
+    </WrapperDashoboard>
+  );
 }

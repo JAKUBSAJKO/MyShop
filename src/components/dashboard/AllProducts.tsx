@@ -1,11 +1,11 @@
+import { useQuery } from "react-query";
+import { getProducts } from "../../../services/services";
 import { Product } from "../../../types";
 import AllProductsTable from "./AllProductsTable";
 
-interface AllProductsProps {
-  products: Product[] | undefined;
-}
+export default function AllProducts() {
+  const { data: products } = useQuery<Product[]>("products", getProducts);
 
-export default function AllProducts({ products }: AllProductsProps) {
   return (
     <div className="w-full h-full">
       <AllProductsTable products={products} />
