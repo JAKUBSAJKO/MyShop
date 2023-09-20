@@ -1,11 +1,13 @@
 import { ReactNode } from "react";
+import { useDashboardTitle } from "../../stories/title";
 
 interface DashboardScreenProps {
   children: ReactNode;
-  title: string;
 }
 
-export default function DashboardScreen({ children, title }: DashboardScreenProps) {
+export default function DashboardScreen({ children }: DashboardScreenProps) {
+  const title = useDashboardTitle((set) => set.title);
+
   return (
     <div className="flex-1 h-full w-auto mt-4 flex flex-col">
       <div className="w-full h-full p-12 flex flex-col">

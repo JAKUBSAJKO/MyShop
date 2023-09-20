@@ -16,6 +16,11 @@ export const getProducts = async () => {
   return response.data;
 };
 
+export const getCategories = async () => {
+  const response = await api.get("api/products/category");
+  return response.data;
+};
+
 export const updateQuantity = async ({ productId, currentQuantity }: UpdateQuantity) => {
   const response = await api.patch(`/api/products/${productId}`, {
     currentQuantity,

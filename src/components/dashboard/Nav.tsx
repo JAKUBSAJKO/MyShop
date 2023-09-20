@@ -1,13 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
-
 import { dashboardList } from "../../../constants";
+import { useDashboardTitle } from "../../../stories/title";
 
-interface NavProps {
-  title: string;
-  setTitle: Dispatch<SetStateAction<string>>;
-}
+export default function Nav() {
+  const title = useDashboardTitle((set) => set.title);
+  const changeTitle = useDashboardTitle((set) => set.changeTitle);
 
-export default function Nav({ title, setTitle }: NavProps) {
   return (
     <ul className="w-full flex flex-col gap-2">
       {dashboardList.map((element) => (
@@ -15,7 +12,7 @@ export default function Nav({ title, setTitle }: NavProps) {
           className={`py-4 px-4 rounded-lg flex items-center gap-4 hover:bg-gray-900 cursor-pointer ${
             title === element.title ? "bg-orange-500 text-white" : "text-gray-400"
           }`}
-          onClick={() => setTitle(element.title)}
+          onClick={() => changeTitle(element.title)}
           key={element.title}
         >
           <>{<element.icon className="w-5 h-5" />}</>

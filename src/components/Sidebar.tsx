@@ -1,17 +1,11 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction } from "react";
 import { RiUserLine } from "react-icons/ri";
 import { routes } from "../../routes/routes";
 import Nav from "./dashboard/Nav";
 
-interface SidebarProps {
-  title: string;
-  setTitle: Dispatch<SetStateAction<string>>;
-}
-
-export default function Sidebar({ title, setTitle }: SidebarProps) {
+export default function Sidebar() {
   const { data: session } = useSession();
 
   const router = useRouter();
@@ -30,7 +24,7 @@ export default function Sidebar({ title, setTitle }: SidebarProps) {
             <h1 className="text-4xl text-white font-raleway font-bold">My Shop</h1>
           </Link>
         </div>
-        <Nav title={title} setTitle={setTitle} />
+        <Nav />
       </div>
       <div className="w-full h-32 bg-gray-900 mb-10 rounded-xl drop-shadow-md p-4 flex flex-col justify-center gap-4">
         <div className="flex items-center gap-2">
