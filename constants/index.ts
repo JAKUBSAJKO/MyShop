@@ -1,4 +1,5 @@
-import { FaHome, FaPlusCircle, FaTruck, FaClipboardList } from "react-icons/fa";
+import { FaClipboardList, FaHome, FaPlusCircle, FaTruck } from "react-icons/fa";
+import { routes } from "../routes/routes";
 
 export const dashboard = {
   home: "Strona główna",
@@ -8,8 +9,8 @@ export const dashboard = {
 };
 
 export const dashboardList = [
-  { icon: FaHome, title: dashboard.home },
-  { icon: FaPlusCircle, title: dashboard.addProduct },
-  { icon: FaTruck, title: dashboard.enterDelivery },
-  { icon: FaClipboardList, title: dashboard.allProducts },
+  { id: 1, icon: FaHome, title: dashboard.home, route: routes.dashboard },
+  { id: 2, icon: FaPlusCircle, title: dashboard.addProduct, route: routes.dashboardNewProduct },
+  { id: 3, icon: FaTruck, title: dashboard.enterDelivery, route: routes.dashboardDelivery },
+  { id: 4, icon: FaClipboardList, title: dashboard.allProducts, route: routes.dashboardProductsList },
 ];
