@@ -1,18 +1,16 @@
 import { FormEvent, useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ClipLoader } from "react-spinners";
-import { updateQuantity } from "../../../services/services";
+import { getProducts, updateQuantity } from "../../../services/services";
 import { Product } from "../../../types";
 
-interface DeliveryProps {
-  products: Product[] | undefined;
-}
-
-export default function Delivery({ products }: DeliveryProps) {
+export default function DeliveryContent() {
   const [displayingProduct, setDisplayingProduct] = useState<Product>();
   const [currentProductNumber, setCurrentProductNumber] = useState(0);
   const [quantity, setQuantity] = useState(0);
+
+  const { data: products } = useQuery<Product[]>("products", getProducts);
 
   const queryClient = useQueryClient();
 

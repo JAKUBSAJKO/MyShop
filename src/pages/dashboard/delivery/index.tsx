@@ -1,3 +1,10 @@
+import DeliveryContent from "@/components/dashboard/DeliveryContent";
+import WrapperDashoboard from "@/layout/WrapperDashoboard";
+
 export default function Delivery() {
-  return <div>Delivery</div>;
+  return (
+    <WrapperDashoboard>
+      <DeliveryContent />
+    </WrapperDashoboard>
+  );
 }
