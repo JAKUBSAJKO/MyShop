@@ -57,7 +57,7 @@ export default function Drawer({ products, setBasketInLS, toggle }: DrawerProps)
       <ul className="menu px-8 py-4 w-96 bg-base-100 text-base-content gap-4">
         <div className="mt-4 flex justify-between items-center">
           <h1 className="font-raleway text-white text-4xl pl-0">Koszyk</h1>
-          <button onClick={toggle}>
+          <button className="sm:hidden" onClick={toggle}>
             <IoMdClose className="text-2xl" />
           </button>
         </div>

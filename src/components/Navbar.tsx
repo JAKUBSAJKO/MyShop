@@ -2,6 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
 import { MdOutlinePersonOutline } from "react-icons/md";
+import { RiUserLine } from "react-icons/ri";
 
 import { useState } from "react";
 import { useBasketStore } from "../../stories/store";
@@ -58,16 +59,29 @@ export default function Navbar() {
           </div>
         )}
       </div>
-      <button className="md:hidden" onClick={() => setOpenMenu(true)}>
+      <button className={`md:hidden ${session ? "" : "hidden"}`} onClick={() => setOpenMenu(true)}>
         <IoMdMenu className="text-2xl" />
       </button>
       {openMenu && (
         <div className="md:hidden absolute top-0 left-0 w-full h-full bg-base-100 z-50 flex flex-col p-6">
-          <div className="w-full h-full flex flex-col">
+          <div className="w-full h-full flex flex-col justify-between">
             <div className="flex justify-between">
               <p className="text-xl font-raleway font-semibold">MyShop</p>
               <button onClick={() => setOpenMenu(false)}>
                 <IoMdClose className="text-2xl" />
+              </button>
+            </div>
+            <div className="flex flex-col items-center mb-4">
+              <div className="flex items-center gap-1 mb-4">
+                <p className="text-white text-lg font-normal font-raleway">| </p>
+                <RiUserLine className="text-white text-2xl" />
+                <p className="text-white text-lg font-normal font-raleway">{session?.user?.name} |</p>
+              </div>
+              <button
+                className="w-full bg-orange-500 font-raleway font-bold text-sm text-white rounded-lg py-3 hover:bg-orange-600 hover:scale-105"
+                onClick={() => signOut()}
+              >
+                Wyloguj
               </button>
             </div>
           </div>
