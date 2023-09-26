@@ -72,17 +72,17 @@ export default function Summary() {
   }, [basket]);
 
   return (
-    <div className="w-full h-screen p-8 flex flex-col bg-orange-400 md:flex-row md:p-16">
-      <div className="md:basis-3/5 flex flex-col text-white gap-6">
+    <div className="w-full h-screen p-8 flex flex-col justify-center items-center bg-orange-400 lg:flex-row lg:justify-start lg:items-stretch lg:p-16">
+      <div className="lg:basis-3/5 flex flex-col text-white gap-6">
         <button className="flex items-center gap-2" onClick={() => router.push(routes.home)}>
           <BiArrowBack />
           <p className="uppercase font-medium">Kontynuuj zakupy</p>
         </button>
-        <div className="mb-8 md:mt-2">
+        <div className="mb-8 lg:mt-2 lg:mb-0">
           <h1 className="text-4xl">TWÓJ KOSZYK</h1>
           <p>Masz w swoim koszyku {basket.length} rzeczy</p>
         </div>
-        <ul className="hidden max-w-xl md:flex flex-col gap-4 overflow-y-scroll no-scrollbar">
+        <ul className="hidden max-w-xl lg:flex flex-col gap-4 overflow-y-scroll no-scrollbar">
           {basket.map((product) => (
             <li key={product.id} className="h-24 bg-nav-grey-200 py-4 flex items-center rounded-2xl">
               <div className="h-16 px-3 mx-4 bg-white flex justify-center items-center rounded-xl">
@@ -108,8 +108,8 @@ export default function Summary() {
           ))}
         </ul>
       </div>
-      <div className="md:basis-2/5 flex flex-col justify-end">
-        <div className="max-w-sm bg-nav-grey-200 rounded-2xl text-white p-8 flex flex-col gap-6">
+      <div className="lg:basis-2/5 flex flex-col justify-end">
+        <div className="w-80 bg-nav-grey-200 rounded-2xl text-white p-8 flex flex-col gap-6">
           <h3 className="text-xl">Podsumowanie</h3>
           <hr />
           <div className="flex flex-col gap-2">
