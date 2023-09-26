@@ -1,21 +1,21 @@
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { IoMdClose } from "react-icons/io";
 import { useMutation, useQueryClient } from "react-query";
 
-import { useBasketStore } from "../../stories/store";
 import { routes } from "../../routes/routes";
-import DrawerCard from "./DrawerCard";
-import { Product, ProductInBasket } from "../../types";
 import { updateQuantity } from "../../services/services";
+import { useBasketStore } from "../../stories/store";
+import { Product, ProductInBasket } from "../../types";
+import DrawerCard from "./DrawerCard";
 
 interface DrawerProps {
   products: Product[];
-  setBasketInLS: (
-    value: ProductInBasket[] | ((val: ProductInBasket[]) => ProductInBasket[])
-  ) => void;
+  setBasketInLS: (value: ProductInBasket[] | ((val: ProductInBasket[]) => ProductInBasket[])) => void;
+  toggle: () => void;
 }
 
-export default function Drawer({ products, setBasketInLS }: DrawerProps) {
+export default function Drawer({ products, setBasketInLS, toggle }: DrawerProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data: session } = useSession();
@@ -55,7 +55,12 @@ export default function Drawer({ products, setBasketInLS }: DrawerProps) {
     <div className="drawer-side">
       <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
       <ul className="menu px-8 py-4 w-96 bg-base-100 text-base-content gap-4">
-        <h1 className="font-raleway text-white text-4xl pl-0 mt-4">Koszyk</h1>
+        <div className="mt-4 flex justify-between items-center">
+          <h1 className="font-raleway text-white text-4xl pl-0">Koszyk</h1>
+          <button onClick={toggle}>
+            <IoMdClose className="text-2xl" />
+          </button>
+        </div>
         <li className="border-2 border-white mx-0 mb-4"></li>
         {basket.map((product) => (
           <DrawerCard key={product.id} product={product} />
