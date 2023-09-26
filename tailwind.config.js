@@ -11,6 +11,9 @@ module.exports = {
         "login-foto": "url('/images/login.jpg')",
         "signup-foto": "url('/images/signup.jpg')",
       },
+      dropShadow: {
+        "left-shadow": "-25px 25px 25px rgb(0 0 0 / 0.15)",
+      },
       fontFamily: {
         raleway: ["var(--font-raleway)"],
         roboto: ["var(--font-roboto)"],

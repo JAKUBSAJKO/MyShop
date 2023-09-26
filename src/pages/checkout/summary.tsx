@@ -72,8 +72,8 @@ export default function Summary() {
   }, [basket]);
 
   return (
-    <div className="w-full h-screen p-8 flex flex-col justify-center items-center bg-orange-400 lg:flex-row lg:justify-start lg:items-stretch lg:p-16">
-      <div className="lg:basis-3/5 flex flex-col text-white gap-6">
+    <div className="w-full h-screen p-8 flex flex-col justify-center items-center bg-orange-400 lg:flex-row lg:justify-start lg:items-stretch lg:p-0">
+      <div className="lg:basis-3/5 flex flex-col text-white gap-6 lg:p-16 2xl:pl-32">
         <button className="flex items-center gap-2" onClick={() => router.push(routes.home)}>
           <BiArrowBack />
           <p className="uppercase font-medium">Kontynuuj zakupy</p>
@@ -92,11 +92,9 @@ export default function Summary() {
                 <h2 className="text-lg font-semibold">{product.name}</h2>
                 <div className="flex items-center gap-8 mr-8">
                   <div className="flex items-center gap-4">
-                    <button className="text-lg font-bold">+</button>
                     <p className="w-6 h-6 bg-white text-nav-grey-200 font-bold rounded-md flex justify-center items-center">
                       {product.quantity}
                     </p>
-                    <button className="text-lg font-bold">-</button>
                   </div>
                   <p className="w-12 flex justify-center items-center">{product.price} zł</p>
                   <button onClick={() => removeItem(product)} className="hover:text-trash hover:scale-105">
@@ -108,31 +106,31 @@ export default function Summary() {
           ))}
         </ul>
       </div>
-      <div className="lg:basis-2/5 flex flex-col justify-end">
-        <div className="w-80 bg-nav-grey-200 rounded-2xl text-white p-8 flex flex-col gap-6">
-          <h3 className="text-xl">Podsumowanie</h3>
+      <div className="lg:basis-2/5 lg:bg-nav-grey-200 flex flex-col justify-end lg:drop-shadow-left-shadow lg:justify-center lg:items-center">
+        <div className="w-80 bg-nav-grey-200 rounded-2xl text-white p-8 flex flex-col gap-6 lg:w-full lg:max-w-lg">
+          <h3 className="text-xl lg:text-3xl">Podsumowanie</h3>
           <hr />
           <div className="flex flex-col gap-2">
             <div className="px-2 flex justify-between items-center">
-              <p className="text-nav-grey">Produkty</p>
-              <p>{total} zł</p>
+              <p className="text-nav-grey lg:text-lg">Produkty</p>
+              <p className="lg:text-lg">{total} zł</p>
             </div>
             <div className="px-2 flex justify-between items-center">
-              <p className="text-nav-grey">Wysyłka</p>
-              <p>0 zł</p>
+              <p className="text-nav-grey lg:text-lg">Wysyłka</p>
+              <p className="lg:text-lg">0 zł</p>
             </div>
           </div>
           <hr />
           <div className="px-4 flex justify-between items-center">
-            <p className="text-xl">Razem</p>
-            <p className="text-xl">{total} zł</p>
+            <p className="text-xl lg:text-3xl">Razem</p>
+            <p className="text-xl lg:text-3xl">{total} zł</p>
           </div>
           <button
             role="link"
             onClick={goToCheckout}
             className={`py-3 rounded-lg font-semibold hover:scale-105 ${
               basket.length < 1 ? "bg-gray-400 hover:scale-100" : "bg-orange-500 hover:bg-orange-600"
-            }`}
+            } lg:mt-8`}
             disabled={basket.length < 1}
           >
             Przejdź do płatności
