@@ -17,7 +17,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-gray-800 shadow-2xl px-4 flex flex-col justify-between">
+    <aside className="hidden w-64 bg-gray-800 shadow-2xl px-4 lg:flex flex-col justify-between">
       <div>
         <div className="flex justify-center items-center my-12">
           <Link href={routes.home}>

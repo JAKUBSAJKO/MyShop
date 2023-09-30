@@ -47,28 +47,30 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full min-h-[calc(100vh_-_160px)]">
+    <div className="w-full min-h-[calc(100vh_-_160px)] p-4 lg:p-0">
       {loading ? (
         <div className="w-full min-h-[calc(100vh_-_160px)] flex justify-center items-center">
           <ClipLoader size={64} color="#ffffff" />
         </div>
       ) : (
-        <div className="w-full h-full flex">
+        <div className="w-full h-full flex flex-col gap-8 xl:flex-row xl:gap-0">
           <div className="w-80 h-36 bg-gray-800 rounded-xl flex flex-col gap-5 px-6 py-4">
             <h2 className="font-raleway font-medium text-white">Całkowity zysk</h2>
             <p className="font-raleway text-white text-4xl self-center">
               {balance} <span className="font-raleway text-sm text-white uppercase">ZŁ</span>
             </p>
           </div>
-          <div className="flex-1 ml-10 bg-gray-800 rounded-xl px-6 py-4">
-            <h2 className="font-raleway font-medium text-white">Last 5 Transations</h2>
-            <div className="w-full overflow-x-auto mt-4">
+          <div className="flex-1 bg-gray-800 rounded-xl lg:px-6 lg:py-4 xl:ml-10">
+            <h2 className="font-raleway font-medium text-white px-4 pt-4">Ostatnich 5 tranzakcji</h2>
+            <div className="w-full overflow-x-auto mt-4 shadow-2xl">
               <table className="table w-full">
                 <thead>
                   <tr>
-                    <th className="font-raleway text-xs font-medium text-white uppercase bg-gray-800">Dane osobowe</th>
+                    <th className="hidden font-raleway text-xs font-medium text-white uppercase bg-gray-800 sm:block">
+                      Dane osobowe
+                    </th>
                     <th className="font-raleway text-xs font-medium text-white uppercase bg-gray-800">Adres email</th>
-                    <th className="font-raleway text-xs font-medium text-white uppercase bg-gray-800 flex justify-center">
+                    <th className="hidden font-raleway text-xs font-medium text-white uppercase bg-gray-800 justify-center sm:flex">
                       Kwota | ZŁ
                     </th>
                   </tr>
@@ -76,9 +78,11 @@ export default function Home() {
                 <tbody>
                   {lastCharges?.map((item) => (
                     <tr key={item.id} className="py-4 my-4">
-                      <td className="bg-gray-900 font-raleway font-medium text-white">{item.user.name}</td>
+                      <td className="hidden bg-gray-900 font-raleway font-medium text-white sm:block">
+                        {item.user.name}
+                      </td>
                       <td className="bg-gray-900 font-raleway font-medium text-white">{item.user.email}</td>
-                      <td className="bg-gray-900 font-raleway font-medium text-white flex justify-center">
+                      <td className="hidden bg-gray-900 font-raleway font-medium text-white justify-center sm:flex">
                         {item.amount}
                       </td>
                     </tr>
