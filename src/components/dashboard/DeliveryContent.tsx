@@ -1,9 +1,9 @@
 import { FormEvent, useEffect, useState } from "react";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ClipLoader } from "react-spinners";
 import { getProducts, updateQuantity } from "../../../services/services";
 import { Product } from "../../../types";
+import DeliveryButton from "../DeliveryButton";
 
 export default function DeliveryContent() {
   const [displayingProduct, setDisplayingProduct] = useState<Product>();
@@ -58,21 +58,22 @@ export default function DeliveryContent() {
   }, [currentProductNumber, products]);
 
   return (
-    <div className="text-white my-16 flex justify-center">
-      <div className="flex flex-col items-center gap-12">
+    <div className="text-white my-12 flex justify-center lg:my-16">
+      <div className="flex flex-col items-center gap-8 lg:gap-12">
         {isLoading ? (
           <div className="h-[500px] flex justify-center items-center">
             <ClipLoader size={64} color="#ffffff" />
           </div>
         ) : (
           <>
-            <div className="flex items-center gap-8">
-              <button
-                onClick={prevProduct}
-                className="w-16 h-16 bg-gray-800 rounded-lg flex justify-center items-center"
-              >
-                <FaArrowLeft className="text-2xl" />
-              </button>
+            <div className="flex flex-col items-center gap-8 lg:flex-row">
+              <DeliveryButton
+                products={products}
+                direction="left"
+                currentProductNumber={currentProductNumber}
+                setCurrentProductNumber={setCurrentProductNumber}
+                style="hidden lg:flex"
+              />
               <div className="bg-gray-800 rounded-2xl p-10 flex flex-col items-center gap-6">
                 <img
                   src={displayingProduct?.image!}
@@ -87,15 +88,30 @@ export default function DeliveryContent() {
                   <p className="font-raleway text-xl">{displayingProduct?.quantity}</p>
                 </div>
               </div>
-              <button
-                onClick={nextProduct}
-                className="w-16 h-16 bg-gray-800 rounded-lg flex justify-center items-center"
-              >
-                <FaArrowRight className="text-2xl" />
-              </button>
+              <div className="flex gap-8 lg:hidden">
+                <DeliveryButton
+                  products={products}
+                  direction="left"
+                  currentProductNumber={currentProductNumber}
+                  setCurrentProductNumber={setCurrentProductNumber}
+                />
+                <DeliveryButton
+                  products={products}
+                  direction="right"
+                  currentProductNumber={currentProductNumber}
+                  setCurrentProductNumber={setCurrentProductNumber}
+                />
+              </div>
+              <DeliveryButton
+                products={products}
+                direction="right"
+                currentProductNumber={currentProductNumber}
+                setCurrentProductNumber={setCurrentProductNumber}
+                style="hidden lg:flex"
+              />
             </div>
             <form onSubmit={enterDelivery} className="flex items-center">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col items-center gap-4">
                 <div className="relative w-48 h-20 bg-gray-800 rounded-lg">
                   <input
                     type="number"
