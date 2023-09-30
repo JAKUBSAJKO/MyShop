@@ -99,9 +99,12 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex gap-16">
-        <div className="w-add-product h-full">
-          <div className="w-full bg-gray-800 rounded-2xl py-14 flex flex-col items-center gap-3">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-8 pt-4 pb-16 xl:flex-row lg:pt-0 lg:pb-0 lg:gap-16"
+      >
+        <div className="w-80 h-full sm:w-add-product">
+          <div className="w-full bg-gray-800 rounded-2xl py-8 flex flex-col items-center gap-6 lg:gap-3 lg:py-14">
             <div className="flex flex-col gap-2">
               <label htmlFor="name" className="form-add-product-title">
                 Nazwa produktu
@@ -135,7 +138,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
               <textarea
                 id="description"
                 {...register("description", { required: true })}
-                className=" w-96 h-32 border-2 border-gray-400 rounded-lg bg-transparent p-4"
+                className="w-64 h-32 border-2 border-gray-400 rounded-lg bg-transparent p-4 sm:w-96"
               />
               {errors.description && <p className="form-error">Opis produktu jest wymagana</p>}
             </div>
@@ -167,7 +170,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
               {errors.quantity && <p className="form-error">Cena produktu jest wymagana</p>}
             </div>
             <button
-              className={`w-96 text-white mt-12 ${fileError ? "form-btn-disabled" : "form-btn"}`}
+              className={`w-64 text-white mt-12 sm:w-96 ${fileError ? "form-btn-disabled" : "form-btn"}`}
               disabled={fileError !== null}
             >
               Dodaj

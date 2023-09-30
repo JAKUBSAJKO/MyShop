@@ -8,7 +8,7 @@ export default function NewProduct() {
 
   return (
     <WrapperDashoboard>
-      <div className="w-full h-full flex">
+      <div className="w-full h-full flex justify-center sm:justify-start sm:pl-5 lg:pl-0">
         <AddProductForm categories={categories} />
       </div>
     </WrapperDashoboard>
