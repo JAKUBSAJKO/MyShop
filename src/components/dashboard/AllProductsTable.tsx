@@ -105,7 +105,7 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
 
   return (
     <>
-      <div className="overflow-x-auto">
+      <div className="hidden overflow-x-auto lg:block">
         <table className="table w-full [&_tr.hover:hover_*]:!bg-orange-500">
           <thead>
             {table.getHeaderGroups().map((headerGroups) => (
@@ -141,6 +141,10 @@ export default function AllProductsTable({ products }: AllProductsTableProps) {
             </tbody>
           )}
         </table>
+      </div>
+      <div className="w-full h-[calc(100vh_-_82px)] font-raleway text-xl text-white px-4 text-center uppercase flex justify-center items-center lg:hidden sm:px-12 md:px-16">
+        Przepraszamy, ta opcja jest dostępna tylko na urządzeniach desktopowych. Prosimy korzystać z komputera lub
+        laptopa, aby z niej skorzystać.
       </div>
       {openModal && (
         <BeforeDeleteProductModal
