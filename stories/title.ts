@@ -1,6 +1,5 @@
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
-import { dashboard } from "../constants";
 
 interface DashboardTitleStore {
   title: string;
@@ -8,7 +7,7 @@ interface DashboardTitleStore {
 }
 
 export const useDashboardTitle = create<DashboardTitleStore>()((set) => ({
-  title: dashboard.home,
+  title: "",
   changeTitle: (newTitle: string) =>
     set((state) => ({
       title: newTitle,
