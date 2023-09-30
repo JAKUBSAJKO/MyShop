@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { useRouter } from "next/router";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import { routes } from "../../routes/routes";
 
@@ -42,12 +42,9 @@ export default function SignUpForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-sm font-raleway flex flex-col justify-start gap-6"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="w-sm font-raleway flex flex-col justify-start gap-6">
       <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="font-semibold">
+        <label htmlFor="name" className="font-semibold">
           Imię i nazwisko
         </label>
         <input

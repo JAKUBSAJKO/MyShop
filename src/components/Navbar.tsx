@@ -1,14 +1,22 @@
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
-import { MdOutlinePersonOutline } from "react-icons/md";
+import { MdOutlinePersonOutline, MdSpaceDashboard } from "react-icons/md";
 import { RiUserLine } from "react-icons/ri";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { routes } from "../../routes/routes";
 import { useBasketStore } from "../../stories/store";
 import Button from "./Button";
+import Nav from "./dashboard/Nav";
 
-export default function Navbar() {
+interface Navbar {
+  inDashboard?: boolean;
+  setHideContent?: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function Navbar({ inDashboard, setHideContent }: Navbar) {
   const [openMenu, setOpenMenu] = useState(false);
 
   const { data: session } = useSession();
@@ -18,13 +26,24 @@ export default function Navbar() {
   const goToSignIn = () => signIn();
 
   return (
-    <nav className="navbar bg-base-100 px-8">
+    <nav className={`navbar px-8 ${inDashboard ? "bg-gray-950 shadow-xl mb-8 lg:hidden" : "bg-base-100"}`}>
       <div className="flex-1">
-        <p className="text-xl font-raleway font-semibold">MyShop</p>
+        <Link href={routes.home}>
+          <h1 className="text-2xl text-white font-raleway font-bold">My Shop</h1>
+        </Link>
       </div>
       <div className="flex items-center gap-4">
+        <Link
+          href={routes.dashboard}
+          className={`hidden py-2 px-4 rounded-lg items-center gap-4 shadow-md cursor-pointer bg-orange-500 text-white ${
+            inDashboard ? "lg:flex" : "md:flex"
+          }`}
+        >
+          <MdSpaceDashboard className="w-5 h-5" />
+          <p className="font-raleway font-medium">Dashboard</p>
+        </Link>
         {session ? (
-          <div className="mr-4 md:mr-0">
+          <div className={`mr-4 md:mr-0 ${inDashboard && "hidden"}`}>
             <label htmlFor="my-drawer-4" tabIndex={0} className="btn btn-ghost btn-circle drawer-button">
               <div className="indicator">
                 <HiOutlineShoppingCart className="text-2xl text-nav-grey" />
@@ -35,8 +54,8 @@ export default function Navbar() {
         ) : null}
         {session ? (
           <>
-            <p className="hidden md:flex">{session.user?.name}</p>
-            <div className="hidden md:flex dropdown dropdown-end">
+            <p className={`hidden ${inDashboard ? "lg:flex" : "md:flex"}`}>{session.user?.name}</p>
+            <div className={`hidden dropdown dropdown-end ${inDashboard ? "lg:flex" : "md:flex"}`}>
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <MdOutlinePersonOutline className="text-2xl text-nav-grey" />
               </label>
@@ -59,26 +78,53 @@ export default function Navbar() {
           </div>
         )}
       </div>
-      <button className={`md:hidden ${session ? "" : "hidden"}`} onClick={() => setOpenMenu(true)}>
+      <button
+        className={`${inDashboard ? "lg:hidden" : "md:hidden"} ${session ? "" : "hidden"}`}
+        onClick={() => {
+          setOpenMenu(true);
+          if (setHideContent) setHideContent(true);
+        }}
+      >
         <IoMdMenu className="text-2xl" />
       </button>
       {openMenu && (
-        <div className="md:hidden absolute top-0 left-0 w-full h-full bg-base-100 z-50 flex flex-col p-6">
+        <div
+          className={`md:hidden absolute top-0 left-0 w-full h-full z-50 flex flex-col overflow-hidden ${
+            inDashboard ? "bg-gray-900" : "bg-base-100"
+          }`}
+        >
           <div className="w-full h-full flex flex-col justify-between">
-            <div className="flex justify-between">
-              <p className="text-xl font-raleway font-semibold">MyShop</p>
-              <button onClick={() => setOpenMenu(false)}>
+            <div className={`flex justify-between p-6 shadow-md ${inDashboard ? "bg-gray-950" : "bg-base-200"}`}>
+              <Link href={routes.home}>
+                <h1 className="text-2xl text-white font-raleway font-bold">My Shop</h1>
+              </Link>
+              <button
+                onClick={() => {
+                  setOpenMenu(false);
+                  if (setHideContent) setHideContent(false);
+                }}
+              >
                 <IoMdClose className="text-2xl" />
               </button>
             </div>
-            <div className="flex flex-col items-center mb-4">
+            {inDashboard && <Nav inDashboard={true} />}
+            <div className={`w-full h-full px-6 py-12 ${inDashboard && "hidden"}`}>
+              <Link
+                href={routes.dashboard}
+                className="py-4 px-4 rounded-lg flex items-center gap-4 shadow-md cursor-pointer bg-orange-500 text-white"
+              >
+                <MdSpaceDashboard className="w-5 h-5" />
+                <p className="font-raleway font-medium">Dashboard</p>
+              </Link>
+            </div>
+            <div className="flex flex-col items-center mb-4 p-6">
               <div className="flex items-center gap-1 mb-4">
                 <p className="text-white text-lg font-normal font-raleway">| </p>
                 <RiUserLine className="text-white text-2xl" />
                 <p className="text-white text-lg font-normal font-raleway">{session?.user?.name} |</p>
               </div>
               <button
-                className="w-full bg-orange-500 font-raleway font-bold text-sm text-white rounded-lg py-3 hover:bg-orange-600 hover:scale-105"
+                className="w-full bg-orange-500 font-raleway font-bold text-sm text-white rounded-lg py-3 shadow-md hover:bg-orange-600 hover:scale-105"
                 onClick={() => signOut()}
               >
                 Wyloguj

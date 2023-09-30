@@ -143,7 +143,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
               {errors.description && <p className="form-error">Opis produktu jest wymagana</p>}
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="description" className="form-add-product-title">
+              <label htmlFor="price" className="form-add-product-title">
                 Cena produktu
               </label>
               <input
@@ -157,7 +157,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
               {errors.description && <p className="form-error">Cena produktu jest wymagana</p>}
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="description" className="form-add-product-title">
+              <label htmlFor="quantity" className="form-add-product-title">
                 Ilość produktu
               </label>
               <input

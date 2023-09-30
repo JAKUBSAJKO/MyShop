@@ -53,7 +53,7 @@ export default function Home() {
           <ClipLoader size={64} color="#ffffff" />
         </div>
       ) : (
-        <div className="w-full h-full flex flex-col items-center gap-8 md:items-stretch xl:flex-row xl:gap-0">
+        <div className="w-full h-full flex flex-col items-center gap-8 py-8 md:items-stretch md:py-4 xl:flex-row xl:gap-0">
           <div className="w-80 h-36 bg-gray-800 rounded-xl flex flex-col gap-5 px-6 py-4">
             <h2 className="font-raleway font-medium text-white">Całkowity zysk</h2>
             <p className="font-raleway text-white text-4xl self-center">

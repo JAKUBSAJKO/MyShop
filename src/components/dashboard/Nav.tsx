@@ -2,12 +2,16 @@ import Link from "next/link";
 import { dashboardList } from "../../../constants";
 import { useDashboardTitle } from "../../../stories/title";
 
-export default function Nav() {
+interface NavProps {
+  inDashboard?: boolean;
+}
+
+export default function Nav({ inDashboard }: NavProps) {
   const title = useDashboardTitle((set) => set.title);
   const changeTitle = useDashboardTitle((set) => set.changeTitle);
 
   return (
-    <ul className="w-full flex flex-col gap-2">
+    <ul className={`w-full flex flex-col gap-2 ${inDashboard && "h-full px-6 py-12"}`}>
       {dashboardList.map((item) => (
         <Link key={item.id} href={item.route}>
           <li
