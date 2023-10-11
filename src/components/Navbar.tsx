@@ -33,15 +33,17 @@ export default function Navbar({ inDashboard, setHideContent }: Navbar) {
         </Link>
       </div>
       <div className="flex items-center gap-4">
-        <Link
-          href={routes.dashboard}
-          className={`hidden py-2 px-4 rounded-lg items-center gap-4 shadow-md cursor-pointer bg-orange-500 text-white ${
-            inDashboard ? "lg:flex" : "md:flex"
-          }`}
-        >
-          <MdSpaceDashboard className="w-5 h-5" />
-          <p className="font-raleway font-medium">Dashboard</p>
-        </Link>
+        {session?.user?.name === "Admin" && (
+          <Link
+            href={routes.dashboard}
+            className={`hidden py-2 px-4 rounded-lg items-center gap-4 shadow-md cursor-pointer bg-orange-500 text-white ${
+              inDashboard ? "lg:flex" : "md:flex"
+            }`}
+          >
+            <MdSpaceDashboard className="w-5 h-5" />
+            <p className="font-raleway font-medium">Dashboard</p>
+          </Link>
+        )}
         {session ? (
           <div className={`mr-4 md:mr-0 ${inDashboard && "hidden"}`}>
             <label htmlFor="my-drawer-4" tabIndex={0} className="btn btn-ghost btn-circle drawer-button">
