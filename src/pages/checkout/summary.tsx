@@ -131,10 +131,16 @@ export default function Summary() {
             className={`py-3 rounded-lg font-semibold hover:scale-105 ${
               basket.length < 1 ? "bg-gray-400 hover:scale-100" : "bg-orange-500 hover:bg-orange-600"
             } lg:mt-8`}
-            disabled={basket.length < 1}
+            disabled={basket.length < 1 || total > 50}
           >
             Przejdź do płatności
           </button>
+          {total > 50 && (
+            <p className="font-raleway text-sm">
+              Uwaga! Wartość Twojego koszyka przekroczyła 50 zł. W tej aplikacji testowej obowiązuje limit na wartość
+              zamówienia. Aby kontynuować zakupy, prosimy zmniejsz ilość produktów lub usuń niektóre pozycje z koszyka.
+            </p>
+          )}
         </div>
       </div>
     </div>

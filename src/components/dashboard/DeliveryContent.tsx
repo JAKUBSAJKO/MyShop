@@ -117,6 +117,7 @@ export default function DeliveryContent() {
                     type="number"
                     placeholder="0"
                     min="0"
+                    max="20"
                     className="w-full h-full px-12 text-center bg-gray-800 rounded-lg text-2xl font-medium placeholder:text-white"
                     value={quantity}
                     onChange={(e) => setQuantity(parseInt(e.target.value))}

@@ -164,6 +164,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
                 type="number"
                 id="quantity"
                 min="0"
+                max="20"
                 {...register("quantity", { required: true })}
                 className="form-add-product-input"
               />
