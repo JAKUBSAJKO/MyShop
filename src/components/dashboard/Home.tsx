@@ -11,12 +11,35 @@ interface LastChargesType {
   };
 }
 
+interface ChargeData {
+  id: string;
+  amount: number;
+  billing_details: {
+    name: string;
+    email: string;
+  };
+}
+
+interface CountTotalProfit {
+  balance: Balance;
+}
+
+interface Balance {
+  available: BalaceItem[];
+  pending: BalaceItem[];
+}
+
+interface BalaceItem {
+  amount: number;
+}
+
 export default function Home() {
   const [balance, setBalance] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [lastCharges, setLastCharges] = useState<LastChargesType[]>();
 
-  const countTotalProfit = (data) => {
+  const countTotalProfit = (data: CountTotalProfit) => {
+    console.log(data);
     const available = data.balance.available[0].amount;
     const pending = data.balance.pending[0].amount;
     const totality = (available + pending) / 100;
@@ -27,7 +50,7 @@ export default function Home() {
     const fetchBalance = async () => {
       const res = await fetch(routes.statistics);
       const data = await res.json();
-      const lastCharges: LastChargesType[] = data.charges.data.map((item) => ({
+      const lastCharges: LastChargesType[] = data.charges.data.map((item: ChargeData) => ({
         id: item.id,
         amount: item.amount / 100,
         user: {
