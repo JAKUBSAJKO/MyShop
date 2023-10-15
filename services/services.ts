@@ -8,7 +8,7 @@ interface UpdateQuantity {
 }
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://my-shop-peach.vercel.app",
 });
 
 export const getProducts = async () => {
