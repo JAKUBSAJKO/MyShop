@@ -7,8 +7,10 @@ interface UpdateQuantity {
   currentQuantity: number;
 }
 
+const baseURL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://my-shop-peach.vercel.app";
+
 const api = axios.create({
-  baseURL: "https://my-shop-peach.vercel.app",
+  baseURL,
 });
 
 export const getProducts = async () => {
