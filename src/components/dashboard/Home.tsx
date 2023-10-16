@@ -39,7 +39,6 @@ export default function Home() {
   const [lastCharges, setLastCharges] = useState<LastChargesType[]>();
 
   const countTotalProfit = (data: CountTotalProfit) => {
-    console.log(data);
     const available = data.balance.available[0].amount;
     const pending = data.balance.pending[0].amount;
     const totality = (available + pending) / 100;
@@ -60,7 +59,6 @@ export default function Home() {
       }));
 
       setLastCharges(lastCharges);
-      console.log(lastCharges);
 
       countTotalProfit(data);
       setLoading(false);

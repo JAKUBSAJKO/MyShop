@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
+import { ClipLoader } from "react-spinners";
 import { routes } from "../../routes/routes";
 
 interface SignUp {
@@ -11,6 +12,7 @@ interface SignUp {
 }
 
 export default function SignUpForm() {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -23,6 +25,8 @@ export default function SignUpForm() {
   } = useForm<SignUp>();
 
   const onSubmit: SubmitHandler<SignUp> = async (data) => {
+    setLoading(true);
+
     const user = await fetch(routes.createUser, {
       method: "POST",
       body: JSON.stringify(data),
@@ -38,6 +42,7 @@ export default function SignUpForm() {
       setError(res.message);
     }
 
+    setLoading(false);
     reset();
   };
 
@@ -80,8 +85,8 @@ export default function SignUpForm() {
         />
         {errors.password && <p className="form-error">Hasło jest wymagane</p>}
       </div>
-      <button className="bg-orange-500 font-bold py-3 rounded-lg mt-5 hover:bg-orange-600 hover:scale-105">
-        Zarejestruj się
+      <button className="bg-orange-500 font-bold py-3 rounded-lg mt-5 hover:bg-orange-600 hover:scale-105 flex justify-center items-center gap-2">
+        Zarejestruj się {loading && <ClipLoader size={20} color="#ffffff" />}
       </button>
       {error ? <p className="form-error">{error}</p> : null}
     </form>
