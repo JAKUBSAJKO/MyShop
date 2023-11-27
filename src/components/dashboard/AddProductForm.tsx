@@ -49,7 +49,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
     // Step 1: Add file to supabase storage
 
     // Ensure that 'data.image' is an array or another indexable type
-    const file = Array.isArray(data.image) ? data.image?.[0] : undefined;
+    const file = data.image?.[0];
     const path = await uploadImg(file);
     const imagePath = `${process.env.NEXT_PUBLIC_LINK_TO_STORAGE_BUCKET}${path?.path}`;
 

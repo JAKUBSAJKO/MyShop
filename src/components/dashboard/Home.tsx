@@ -100,7 +100,7 @@ export default function Home() {
                   {lastCharges?.map((item) => (
                     <tr key={item.id} className="py-4 my-4">
                       <td className="hidden bg-gray-900 font-raleway font-medium text-white sm:block">
-                        {item.user.name}
+                        {item.user.name !== null ? item.user.name : "Nie podano"}
                       </td>
                       <td className="bg-gray-900 font-raleway font-medium text-white">{item.user.email}</td>
                       <td className="hidden bg-gray-900 font-raleway font-medium text-white justify-center sm:flex">
