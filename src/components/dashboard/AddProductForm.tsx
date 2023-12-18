@@ -49,21 +49,20 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
     // Step 1: Add file to supabase storage
 
     // Ensure that 'data.image' is an array or another indexable type
-    const file = data.image instanceof FileList ? data.image[0] : (data.image as File | null);
-    if (file) {
-      const path = await uploadImg(file);
-      const imagePath = `${process.env.NEXT_PUBLIC_LINK_TO_STORAGE_BUCKET}${path?.path}`;
-      const product = {
-        name: data.name,
-        description: data.description,
-        price: data.price,
-        quantity: data.quantity,
-        image: imagePath,
-        categoryId: data.category,
-      };
+    // @ts-ignore
+    const file = data.image?.[0];
+    const path = await uploadImg(file);
+    const imagePath = `${process.env.NEXT_PUBLIC_LINK_TO_STORAGE_BUCKET}${path?.path}`;
+    const product = {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      quantity: data.quantity,
+      image: imagePath,
+      categoryId: data.category,
+    };
 
-      await mutate(product);
-    }
+    await mutate(product);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
