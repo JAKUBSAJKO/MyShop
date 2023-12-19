@@ -41,8 +41,8 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
     register,
     formState: { errors },
     handleSubmit,
-    watch,
     reset,
+    setError,
   } = useForm<AddNewProduct>();
 
   const onSubmit: SubmitHandler<AddNewProduct> = async (data) => {
@@ -51,18 +51,24 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
     // Ensure that 'data.image' is an array or another indexable type
     // @ts-ignore
     const file = data.image?.[0];
-    const path = await uploadImg(file);
-    const imagePath = `${process.env.NEXT_PUBLIC_LINK_TO_STORAGE_BUCKET}${path?.path}`;
-    const product = {
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      quantity: data.quantity,
-      image: imagePath,
-      categoryId: data.category,
-    };
+    if (file !== undefined) {
+      const path = await uploadImg(file);
+      const imagePath = `${process.env.NEXT_PUBLIC_LINK_TO_STORAGE_BUCKET}${path?.path}`;
+      const product = {
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        quantity: data.quantity,
+        image: imagePath,
+        categoryId: data.category,
+      };
 
-    await mutate(product);
+      mutate(product);
+    } else {
+      setError("image", {
+        message: "Wystąpił problem z dodaniem zdjęcia. Spróbuj jeszcze raz dodać zdjęcie",
+      });
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,9 +99,6 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
       console.log(error);
     }
   };
-
-  // Pobranie wybranego pliku zdjęcia
-  const imageFile = watch("image");
 
   return (
     <>
@@ -205,13 +208,13 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
             type="file"
             id="image"
             accept="image/jpeg, image/png"
-            {...register("image", { required: true })}
+            {...register("image", { required: "Zdjęcie produktu jest wymagane" })}
             onChange={handleImageChange}
             className={`${
               imageSrc ? "hidden" : "file-input file-input-bordered w-72 max-w-sm file-input-primary input-file-custom"
             }`}
           />
-          {errors.image && <p className="form-error mt-2">Zdjęcie produktu jest wymagane</p>}
+          {errors.image && <p className="form-error mt-2">{errors.image.message}</p>}
           {fileError ? <p className="form-error mt-2">{fileError}</p> : null}
           <p className="font-raleway font-medium mt-6">
             Dodaj zdjęcie JPEG lub PNG mniejsze niż 2MB. Zalecany rozmiar zdjęcia: 256px x 256px
